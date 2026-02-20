@@ -1,0 +1,116 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="ignoredPackages">
+        <list>
+          <option value="aenum" />
+          <option value="alembic" />
+          <option value="annotated-types" />
+          <option value="anyio" />
+          <option value="APScheduler" />
+          <option value="asgiref" />
+          <option value="async-property" />
+          <option value="asyncpg" />
+          <option value="Authlib" />
+          <option value="black" />
+          <option value="boto3" />
+          <option value="botocore" />
+          <option value="certifi" />
+          <option value="cffi" />
+          <option value="charset-normalizer" />
+          <option value="click" />
+          <option value="colorama" />
+          <option value="cryptography" />
+          <option value="dependency-injector" />
+          <option value="deprecation" />
+          <option value="dnspython" />
+          <option value="ecdsa" />
+          <option value="email_validator" />
+          <option value="et_xmlfile" />
+          <option value="fastapi" />
+          <option value="fastapi-cli" />
+          <option value="fastapi_keycloak" />
+          <option value="greenlet" />
+          <option value="gunicorn" />
+          <option value="h11" />
+          <option value="httpcore" />
+          <option value="httptools" />
+          <option value="httpx" />
+          <option value="idna" />
+          <option value="infisicalsdk" />
+          <option value="isort" />
+          <option value="itsdangerous" />
+          <option value="Jinja2" />
+          <option value="jmespath" />
+          <option value="jwcrypto" />
+          <option value="loguru" />
+          <option value="Mako" />
+          <option value="markdown-it-py" />
+          <option value="MarkupSafe" />
+          <option value="mdurl" />
+          <option value="mypy-extensions" />
+          <option value="natsort" />
+          <option value="numpy" />
+          <option value="openpyxl" />
+          <option value="packaging" />
+          <option value="pandas" />
+          <option value="pathspec" />
+          <option value="platformdirs" />
+          <option value="psycopg2-binary" />
+          <option value="pyasn1" />
+          <option value="pycparser" />
+          <option value="pycryptodomex" />
+          <option value="pydantic" />
+          <option value="pydantic-settings" />
+          <option value="pydantic_core" />
+          <option value="Pygments" />
+          <option value="PyJWT" />
+          <option value="PyNaCl" />
+          <option value="python-dateutil" />
+          <option value="python-dotenv" />
+          <option value="python-jose" />
+          <option value="python-keycloak" />
+          <option value="python-multipart" />
+          <option value="pytz" />
+          <option value="PyYAML" />
+          <option value="requests" />
+          <option value="requests-toolbelt" />
+          <option value="rich" />
+          <option value="rsa" />
+          <option value="s3transfer" />
+          <option value="semantic-version" />
+          <option value="sentry-sdk" />
+          <option value="setuptools" />
+          <option value="setuptools-rust" />
+          <option value="shellingham" />
+          <option value="six" />
+          <option value="sniffio" />
+          <option value="SQLAlchemy" />
+          <option value="sqlalchemy-json" />
+          <option value="SQLAlchemy-Utils" />
+          <option value="sqlmodel" />
+          <option value="starlette" />
+          <option value="typer" />
+          <option value="typing_extensions" />
+          <option value="tzdata" />
+          <option value="tzlocal" />
+          <option value="urllib3" />
+          <option value="uv" />
+          <option value="uvicorn" />
+          <option value="uvloop" />
+          <option value="watchfiles" />
+          <option value="websockets" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="list.*" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

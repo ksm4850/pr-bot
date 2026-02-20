@@ -1,0 +1,3965 @@
+{
+  "action": "triggered",
+  "installation": {
+    "uuid": "7672a8c7-6744-4406-8495-69d6d74c0d9a"
+  },
+  "data": {
+    "event": {
+      "event_id": "0188096c254749cd8690aa52ea06a224",
+      "project": 4509981525278720,
+      "release": null,
+      "dist": null,
+      "platform": "python",
+      "message": "",
+      "datetime": "2026-02-05T09:06:36.949306Z",
+      "tags": [
+        [
+          "browser",
+          "Chrome 144.0.0"
+        ],
+        [
+          "browser.name",
+          "Chrome"
+        ],
+        [
+          "client_os",
+          "Mac OS X >=10.15.7"
+        ],
+        [
+          "client_os.name",
+          "Mac OS X"
+        ],
+        [
+          "device",
+          "Mac"
+        ],
+        [
+          "device.family",
+          "Mac"
+        ],
+        [
+          "environment",
+          "dev"
+        ],
+        [
+          "handled",
+          "no"
+        ],
+        [
+          "level",
+          "error"
+        ],
+        [
+          "mechanism",
+          "starlette"
+        ],
+        [
+          "runtime",
+          "CPython 3.12.12"
+        ],
+        [
+          "runtime.name",
+          "CPython"
+        ],
+        [
+          "server_name",
+          "d67ad92177a2"
+        ],
+        [
+          "transaction",
+          "/sentry-debug"
+        ],
+        [
+          "url",
+          "http://slam.10.8.0.6.nip.io/api/api/sentry-debug"
+        ]
+      ],
+      "_dsc": {
+        "environment": "dev",
+        "public_key": "73a156648dbb0b4a7f1ff3a41436b241",
+        "release": null,
+        "replay_id": null,
+        "sample_rand": "0.557263",
+        "sample_rate": "1.0",
+        "sampled": true,
+        "trace_id": "0f58ad5458dc4dcd9c401c8e0b6e6278",
+        "transaction": "/sentry-debug"
+      },
+      "_metrics": {
+        "bytes.ingested.event": 68404,
+        "bytes.stored.event": 76767
+      },
+      "_ref": 4509981525278720,
+      "_ref_version": 2,
+      "breadcrumbs": {
+        "values": [
+          {
+            "category": "app",
+            "data": {
+              "extra": {}
+            },
+            "level": "error",
+            "message": "2026-02-05 18:06:36.765 | ERROR    | app:exception_handler:318 - ZeroDivisionError: division by zero | at /app/app.py:364 in trigger_error | path=/api/sentry-debug method=GET",
+            "timestamp": 1770282396.765843,
+            "type": "log"
+          }
+        ]
+      },
+      "contexts": {
+        "browser": {
+          "browser": "Chrome 144.0.0",
+          "name": "Chrome",
+          "type": "browser",
+          "version": "144.0.0"
+        },
+        "client_os": {
+          "name": "Mac OS X",
+          "os": "Mac OS X >=10.15.7",
+          "type": "os",
+          "version": ">=10.15.7"
+        },
+        "device": {
+          "brand": "Apple",
+          "family": "Mac",
+          "model": "Mac",
+          "type": "device"
+        },
+        "runtime": {
+          "build": "3.12.12 (main, Feb  4 2026, 20:21:31) [GCC 14.2.0]",
+          "name": "CPython",
+          "runtime": "CPython 3.12.12",
+          "type": "runtime",
+          "version": "3.12.12"
+        },
+        "trace": {
+          "client_sample_rate": 1.0,
+          "data": {
+            "http.response.status_code": 500,
+            "thread.id": "136851866180480",
+            "thread.name": "MainThread"
+          },
+          "op": "http.server",
+          "origin": "auto.http.starlette",
+          "span_id": "ac9ced3066e178fa",
+          "status": "internal_error",
+          "trace_id": "0f58ad5458dc4dcd9c401c8e0b6e6278",
+          "type": "trace"
+        }
+      },
+      "culprit": "/sentry-debug",
+      "environment": "dev",
+      "exception": {
+        "values": [
+          {
+            "mechanism": {
+              "data": null,
+              "description": null,
+              "exception_id": null,
+              "handled": false,
+              "help_link": null,
+              "is_exception_group": true,
+              "meta": null,
+              "parent_id": null,
+              "source": null,
+              "synthetic": null,
+              "type": "starlette"
+            },
+            "stacktrace": {
+              "frames": [
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/_utils.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        yield",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/_utils.py",
+                  "function": "collapse_excgroups",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 76,
+                  "lock": null,
+                  "module": "starlette._utils",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "    except BaseException as exc:",
+                    "        if has_exceptiongroups:  # pragma: no cover",
+                    "            while isinstance(exc, BaseExceptionGroup) and len(exc.exceptions) == 1:",
+                    "                exc = exc.exceptions[0]",
+                    ""
+                  ],
+                  "pre_context": [
+                    "",
+                    "",
+                    "@contextmanager",
+                    "def collapse_excgroups() -> typing.Generator[None, None, None]:",
+                    "    try:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {}
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/base.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            async with anyio.create_task_group() as task_group:",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/base.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 177,
+                  "lock": null,
+                  "module": "starlette.middleware.base",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "                response = await self.dispatch_func(request, call_next)",
+                    "                await response(scope, wrapped_receive, send)",
+                    "                response_sent.set()",
+                    "                recv_stream.close()",
+                    "        if app_exc is not None and not exception_already_raised:"
+                  ],
+                  "pre_context": [
+                    "            return response",
+                    "",
+                    "        streams: anyio.create_memory_object_stream[Message] = anyio.create_memory_object_stream()",
+                    "        send_stream, recv_stream = streams",
+                    "        with recv_stream, send_stream, collapse_excgroups():"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app_exc": "ZeroDivisionError('division by zero')",
+                    "call_next": "<function BaseHTTPMiddleware.__call__.<locals>.call_next at 0x7c7700d90900>",
+                    "exception_already_raised": "True",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d7d800>",
+                    "recv_stream": "MemoryObjectReceiveStream(_state=MemoryObjectStreamState(max_buffer_size=0, buffer=deque([]), open_send_channels=0, open_receive_channels=0, waiting_receivers=OrderedDict(), waiting_senders=OrderedDict()), _closed=True)",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<utils.middlewares.AuditLogMiddleware.AuditLogMiddleware object at 0x7c7701fa5880>",
+                    "send": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_send at 0x7c7700d90680>",
+                    "streams": [
+                      "MemoryObjectSendStream(_state=MemoryObjectStreamState(max_buffer_size=0, buffer=deque([]), open_send_channels=0, open_..."
+                    ]
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                    raise BaseExceptionGroup(",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "anyio/_backends/_asyncio.py",
+                  "function": "__aexit__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 772,
+                  "lock": null,
+                  "module": "anyio._backends._asyncio",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "                        \"unhandled errors in a TaskGroup\", self._exceptions",
+                    "                    ) from None",
+                    "                elif exc_val:",
+                    "                    raise exc_val",
+                    "            except BaseException as exc:"
+                  ],
+                  "pre_context": [
+                    "                if self._exceptions:",
+                    "                    # The exception that got us here should already have been",
+                    "                    # added to self._exceptions so it's ok to break exception",
+                    "                    # chaining and avoid adding a \"During handling of above...\"",
+                    "                    # for each nesting level."
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "exc_type": "<class 'ZeroDivisionError'>",
+                    "loop": "<uvloop.Loop running=True closed=False debug=False>",
+                    "self": "<anyio._backends._asyncio.TaskGroup object at 0x7c7701ece060>",
+                    "wait_scope": "<anyio._backends._asyncio.CancelScope object at 0x7c7701ece690>"
+                  }
+                }
+              ]
+            },
+            "type": "ExceptionGroup",
+            "value": "unhandled errors in a TaskGroup"
+          },
+          {
+            "mechanism": {
+              "data": null,
+              "description": null,
+              "exception_id": null,
+              "handled": false,
+              "help_link": null,
+              "is_exception_group": null,
+              "meta": null,
+              "parent_id": null,
+              "source": null,
+              "synthetic": null,
+              "type": "starlette"
+            },
+            "stacktrace": {
+              "frames": [
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/applications.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        await self.middleware_stack(scope, receive, send)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/applications.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 112,
+                  "lock": null,
+                  "module": "starlette.applications",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "    def on_event(self, event_type: str) -> typing.Callable:  # type: ignore[type-arg]",
+                    "        return self.router.on_event(event_type)  # pragma: no cover",
+                    "",
+                    "    def mount(self, path: str, app: ASGIApp, name: str | None = None) -> None:"
+                  ],
+                  "pre_context": [
+                    "",
+                    "    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:",
+                    "        scope[\"app\"] = self",
+                    "        if self.middleware_stack is None:",
+                    "            self.middleware_stack = self.build_middleware_stack()"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "receive": "<bound method RequestResponseCycle.receive of <uvicorn.protocols.http.httptools_impl.RequestResponseCycle object at 0x7c7701ecd430>>",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<fastapi.applications.FastAPI object at 0x7c77032a4440>",
+                    "send": "<function SentryAsgiMiddleware._run_app.<locals>._sentry_wrapped_send at 0x7c7700d7d760>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/errors.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            raise exc",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/errors.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 187,
+                  "lock": null,
+                  "module": "starlette.middleware.errors",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "    def format_line(self, index: int, line: str, frame_lineno: int, frame_index: int) -> str:",
+                    "        values = {",
+                    "            # HTML escape - line could contain < or >",
+                    "            \"line\": html.escape(line).replace(\" \", \"&nbsp\"),"
+                  ],
+                  "pre_context": [
+                    "                await response(scope, receive, send)",
+                    "",
+                    "            # We always continue to raise the exception.",
+                    "            # This allows servers to log the error, or allows test clients",
+                    "            # to optionally raise the error within the test case."
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "_send": "<function ServerErrorMiddleware.__call__.<locals>._send at 0x7c7700d7d8a0>",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d7d800>",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "response": "<fastapi.responses.ORJSONResponse object at 0x7c770200dd00>",
+                    "response_started": "False",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<starlette.middleware.errors.ServerErrorMiddleware object at 0x7c7702023e60>",
+                    "send": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_send at 0x7c7700d7eb60>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/errors.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            await self.app(scope, receive, _send)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/errors.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 165,
+                  "lock": null,
+                  "module": "starlette.middleware.errors",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "        except Exception as exc:",
+                    "            request = Request(scope)",
+                    "            if self.debug:",
+                    "                # In debug mode, return traceback responses.",
+                    "                response = self.debug_response(request, exc)"
+                  ],
+                  "pre_context": [
+                    "            if message[\"type\"] == \"http.response.start\":",
+                    "                response_started = True",
+                    "            await send(message)",
+                    "",
+                    "        try:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "_send": "<function ServerErrorMiddleware.__call__.<locals>._send at 0x7c7700d7d8a0>",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d7d800>",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "response": "<fastapi.responses.ORJSONResponse object at 0x7c770200dd00>",
+                    "response_started": "False",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<starlette.middleware.errors.ServerErrorMiddleware object at 0x7c7702023e60>",
+                    "send": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_send at 0x7c7700d7eb60>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/cors.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            await self.app(scope, receive, send)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/cors.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 85,
+                  "lock": null,
+                  "module": "starlette.middleware.cors",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "            return",
+                    "",
+                    "        if method == \"OPTIONS\" and \"access-control-request-method\" in headers:",
+                    "            response = self.preflight_response(request_headers=headers)",
+                    "            await response(scope, receive, send)"
+                  ],
+                  "pre_context": [
+                    "        method = scope[\"method\"]",
+                    "        headers = Headers(scope=scope)",
+                    "        origin = headers.get(\"origin\")",
+                    "",
+                    "        if origin is None:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "headers": {
+                      "accept": "'application/json'",
+                      "accept-encoding": "'gzip, deflate'",
+                      "accept-language": "'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'",
+                      "connection": "'upgrade'",
+                      "host": "'slam.10.8.0.6.nip.io'",
+                      "referer": "'http://slam.10.8.0.6.nip.io/api/docs'",
+                      "user-agent": "'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'",
+                      "x-forwarded-for": "'10.8.0.4'",
+                      "x-forwarded-proto": "'http'",
+                      "x-real-ip": "'10.8.0.4'"
+                    },
+                    "method": "'GET'",
+                    "origin": "None",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d7d800>",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<starlette.middleware.cors.CORSMiddleware object at 0x7c770203f260>",
+                    "send": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_send at 0x7c7701f45b20>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/sessions.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        await self.app(scope, receive, send_wrapper)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/sessions.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 85,
+                  "lock": null,
+                  "module": "starlette.middleware.sessions",
+                  "package": null,
+                  "platform": null,
+                  "post_context": null,
+                  "pre_context": [
+                    "                        security_flags=self.security_flags,",
+                    "                    )",
+                    "                    headers.append(\"Set-Cookie\", header_value)",
+                    "            await send(message)",
+                    ""
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "connection": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "initial_session_was_empty": "True",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d7d800>",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<starlette.middleware.sessions.SessionMiddleware object at 0x7c770200d340>",
+                    "send": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_send at 0x7c7701f45b20>",
+                    "send_wrapper": "<function SessionMiddleware.__call__.<locals>.send_wrapper at 0x7c7701f46160>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/base.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        with recv_stream, send_stream, collapse_excgroups():",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/base.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 176,
+                  "lock": null,
+                  "module": "starlette.middleware.base",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "            async with anyio.create_task_group() as task_group:",
+                    "                response = await self.dispatch_func(request, call_next)",
+                    "                await response(scope, wrapped_receive, send)",
+                    "                response_sent.set()",
+                    "                recv_stream.close()"
+                  ],
+                  "pre_context": [
+                    "            response.raw_headers = message[\"headers\"]",
+                    "            return response",
+                    "",
+                    "        streams: anyio.create_memory_object_stream[Message] = anyio.create_memory_object_stream()",
+                    "        send_stream, recv_stream = streams"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app_exc": "ZeroDivisionError('division by zero')",
+                    "call_next": "<function BaseHTTPMiddleware.__call__.<locals>.call_next at 0x7c7700d90900>",
+                    "exception_already_raised": "True",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d7d800>",
+                    "recv_stream": "MemoryObjectReceiveStream(_state=MemoryObjectStreamState(max_buffer_size=0, buffer=deque([]), open_send_channels=0, open_receive_channels=0, waiting_receivers=OrderedDict(), waiting_senders=OrderedDict()), _closed=True)",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<utils.middlewares.AuditLogMiddleware.AuditLogMiddleware object at 0x7c7701fa5880>",
+                    "send": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_send at 0x7c7700d90680>",
+                    "streams": [
+                      "MemoryObjectSendStream(_state=MemoryObjectStreamState(max_buffer_size=0, buffer=deque([]), open_send_channels=0, open_..."
+                    ]
+                  }
+                },
+                {
+                  "abs_path": "/usr/local/lib/python3.12/contextlib.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                self.gen.throw(value)",
+                  "data": {
+                    "orig_in_app": -1
+                  },
+                  "errors": null,
+                  "filename": "contextlib.py",
+                  "function": "__exit__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 158,
+                  "lock": null,
+                  "module": "contextlib",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "            except StopIteration as exc:",
+                    "                # Suppress StopIteration *unless* it's the same exception that",
+                    "                # was passed to throw().  This prevents a StopIteration",
+                    "                # raised inside the \"with\" statement from being suppressed.",
+                    "                return exc is not value"
+                  ],
+                  "pre_context": [
+                    "            if value is None:",
+                    "                # Need to force instantiation so we can reliably",
+                    "                # tell if we get the same exception back",
+                    "                value = typ()",
+                    "            try:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "self": "<contextlib._GeneratorContextManager object at 0x7c7701ece030>",
+                    "traceback": "<traceback object at 0x7c7702013880>",
+                    "typ": "<class 'ExceptionGroup'>",
+                    "value": "ExceptionGroup('unhandled errors in a TaskGroup', [ZeroDivisionError('division by zero')])"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/_utils.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        raise exc",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/_utils.py",
+                  "function": "collapse_excgroups",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 82,
+                  "lock": null,
+                  "module": "starlette._utils",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "",
+                    "def get_route_path(scope: Scope) -> str:",
+                    "    path: str = scope[\"path\"]",
+                    "    root_path = scope.get(\"root_path\", \"\")"
+                  ],
+                  "pre_context": [
+                    "    except BaseException as exc:",
+                    "        if has_exceptiongroups:  # pragma: no cover",
+                    "            while isinstance(exc, BaseExceptionGroup) and len(exc.exceptions) == 1:",
+                    "                exc = exc.exceptions[0]",
+                    ""
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {}
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/base.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                response = await self.dispatch_func(request, call_next)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/base.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 178,
+                  "lock": null,
+                  "module": "starlette.middleware.base",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "                await response(scope, wrapped_receive, send)",
+                    "                response_sent.set()",
+                    "                recv_stream.close()",
+                    "        if app_exc is not None and not exception_already_raised:",
+                    "            raise app_exc"
+                  ],
+                  "pre_context": [
+                    "",
+                    "        streams: anyio.create_memory_object_stream[Message] = anyio.create_memory_object_stream()",
+                    "        send_stream, recv_stream = streams",
+                    "        with recv_stream, send_stream, collapse_excgroups():",
+                    "            async with anyio.create_task_group() as task_group:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app_exc": "ZeroDivisionError('division by zero')",
+                    "call_next": "<function BaseHTTPMiddleware.__call__.<locals>.call_next at 0x7c7700d90900>",
+                    "exception_already_raised": "True",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d7d800>",
+                    "recv_stream": "MemoryObjectReceiveStream(_state=MemoryObjectStreamState(max_buffer_size=0, buffer=deque([]), open_send_channels=0, open_receive_channels=0, waiting_receivers=OrderedDict(), waiting_senders=OrderedDict()), _closed=True)",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<utils.middlewares.AuditLogMiddleware.AuditLogMiddleware object at 0x7c7701fa5880>",
+                    "send": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_send at 0x7c7700d90680>",
+                    "streams": [
+                      "MemoryObjectSendStream(_state=MemoryObjectStreamState(max_buffer_size=0, buffer=deque([]), open_send_channels=0, open_..."
+                    ]
+                  }
+                },
+                {
+                  "abs_path": "/app/utils/middlewares/AuditLogMiddleware.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            return await call_next(request)",
+                  "data": {
+                    "client_in_app": true
+                  },
+                  "errors": null,
+                  "filename": "utils/middlewares/AuditLogMiddleware.py",
+                  "function": "dispatch",
+                  "image_addr": null,
+                  "in_app": true,
+                  "instruction_addr": null,
+                  "lineno": 117,
+                  "lock": null,
+                  "module": "utils.middlewares.AuditLogMiddleware",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "        content_type = request.headers.get(\"content-type\", \"\")",
+                    "        if content_type.startswith(\"multipart/form-data\") or content_type.startswith(",
+                    "            \"application/x-www-form-urlencoded\"",
+                    "        ):",
+                    "            return await call_next(request)"
+                  ],
+                  "pre_context": [
+                    "    async def dispatch(self, request: Request, call_next: Callable) -> Response:",
+                    "        # 제외 경로 체크",
+                    "        if request.scope.get(\"type\") == \"websocket\":",
+                    "            return await call_next(request)",
+                    "        if request.method == \"GET\":"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "call_next": "<function BaseHTTPMiddleware.__call__.<locals>.call_next at 0x7c7700d90900>",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<utils.middlewares.AuditLogMiddleware.AuditLogMiddleware object at 0x7c7701fa5880>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/base.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                    raise app_exc",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/base.py",
+                  "function": "call_next",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 156,
+                  "lock": null,
+                  "module": "starlette.middleware.base",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "                raise RuntimeError(\"No response returned.\")",
+                    "",
+                    "            assert message[\"type\"] == \"http.response.start\"",
+                    "",
+                    "            async def body_stream() -> typing.AsyncGenerator[bytes, None]:"
+                  ],
+                  "pre_context": [
+                    "                    message = await recv_stream.receive()",
+                    "            except anyio.EndOfStream:",
+                    "                if app_exc is not None:",
+                    "                    nonlocal exception_already_raised",
+                    "                    exception_already_raised = True"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app_exc": "ZeroDivisionError('division by zero')",
+                    "coro": "<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro at 0x7c7700d90860>",
+                    "exception_already_raised": "True",
+                    "receive_or_disconnect": "<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x7c7700d90b80>",
+                    "recv_stream": "MemoryObjectReceiveStream(_state=MemoryObjectStreamState(max_buffer_size=0, buffer=deque([]), open_send_channels=0, open_receive_channels=0, waiting_receivers=OrderedDict(), waiting_senders=OrderedDict()), _closed=True)",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "response_sent": "<anyio._backends._asyncio.Event object at 0x7c7701ecdb80>",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<utils.middlewares.AuditLogMiddleware.AuditLogMiddleware object at 0x7c7701fa5880>",
+                    "send_no_error": "<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x7c7700d90cc0>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/base.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                        await self.app(scope, receive_or_disconnect, send_no_error)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/base.py",
+                  "function": "coro",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 141,
+                  "lock": null,
+                  "module": "starlette.middleware.base",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "                    except Exception as exc:",
+                    "                        app_exc = exc",
+                    "",
+                    "            task_group.start_soon(coro)",
+                    ""
+                  ],
+                  "pre_context": [
+                    "            async def coro() -> None:",
+                    "                nonlocal app_exc",
+                    "",
+                    "                with send_stream:",
+                    "                    try:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app_exc": "ZeroDivisionError('division by zero')",
+                    "receive_or_disconnect": "<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x7c7700d90b80>",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<utils.middlewares.AuditLogMiddleware.AuditLogMiddleware object at 0x7c7701fa5880>",
+                    "send_no_error": "<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x7c7700d90cc0>",
+                    "send_stream": "MemoryObjectSendStream(_state=MemoryObjectStreamState(max_buffer_size=0, buffer=deque([]), open_send_channels=0, open_receive_channels=0, waiting_receivers=OrderedDict(), waiting_senders=OrderedDict()), _closed=True)"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/middleware/exceptions.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 62,
+                  "lock": null,
+                  "module": "starlette.middleware.exceptions",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "    def http_exception(self, request: Request, exc: Exception) -> Response:",
+                    "        assert isinstance(exc, HTTPException)",
+                    "        if exc.status_code in {204, 304}:",
+                    "            return Response(status_code=exc.status_code, headers=exc.headers)"
+                  ],
+                  "pre_context": [
+                    "        if scope[\"type\"] == \"http\":",
+                    "            conn = Request(scope, receive, send)",
+                    "        else:",
+                    "            conn = WebSocket(scope, receive, send)",
+                    ""
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "conn": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<starlette.middleware.exceptions.ExceptionMiddleware object at 0x7c770223aab0>",
+                    "send": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_send at 0x7c7700d91800>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                raise exc",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/_exception_handler.py",
+                  "function": "wrapped_app",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 53,
+                  "lock": null,
+                  "module": "starlette._exception_handler",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "            if response_started:",
+                    "                raise RuntimeError(\"Caught handled exception, but response already started.\") from exc",
+                    "",
+                    "            if is_async_callable(handler):"
+                  ],
+                  "pre_context": [
+                    "",
+                    "            if handler is None:",
+                    "                handler = _lookup_exception_handler(exception_handlers, exc)",
+                    "",
+                    "            if handler is None:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app": "<fastapi.routing.APIRouter object at 0x7c77032a6240>",
+                    "conn": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "exception_handlers": {
+                      "<class 'fastapi.exceptions.HTTPException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'fastapi.exceptions.RequestValidationError'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'fastapi.exceptions.WebSocketRequestValidationError'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'starlette.exceptions.HTTPException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'starlette.exceptions.WebSocketException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>"
+                    },
+                    "handler": "None",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "response_started": "False",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ]
+                    }
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            await app(scope, receive, sender)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/_exception_handler.py",
+                  "function": "wrapped_app",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 42,
+                  "lock": null,
+                  "module": "starlette._exception_handler",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "        except Exception as exc:",
+                    "            handler = None",
+                    "",
+                    "            if isinstance(exc, HTTPException):",
+                    "                handler = status_handlers.get(exc.status_code)"
+                  ],
+                  "pre_context": [
+                    "            if message[\"type\"] == \"http.response.start\":",
+                    "                response_started = True",
+                    "            await send(message)",
+                    "",
+                    "        try:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app": "<fastapi.routing.APIRouter object at 0x7c77032a6240>",
+                    "conn": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "exception_handlers": {
+                      "<class 'fastapi.exceptions.HTTPException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'fastapi.exceptions.RequestValidationError'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'fastapi.exceptions.WebSocketRequestValidationError'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'starlette.exceptions.HTTPException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'starlette.exceptions.WebSocketException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>"
+                    },
+                    "handler": "None",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "response_started": "False",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ]
+                    }
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/routing.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        await self.middleware_stack(scope, receive, send)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/routing.py",
+                  "function": "__call__",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 714,
+                  "lock": null,
+                  "module": "starlette.routing",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "    async def app(self, scope: Scope, receive: Receive, send: Send) -> None:",
+                    "        assert scope[\"type\"] in (\"http\", \"websocket\", \"lifespan\")",
+                    "",
+                    "        if \"router\" not in scope:"
+                  ],
+                  "pre_context": [
+                    "",
+                    "    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:",
+                    "        \"\"\"",
+                    "        The main entry point to the Router class.",
+                    "        \"\"\""
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<fastapi.routing.APIRouter object at 0x7c77032a6240>",
+                    "send": "<function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x7c7700d91620>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/routing.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                await route.handle(scope, receive, send)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/routing.py",
+                  "function": "app",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 734,
+                  "lock": null,
+                  "module": "starlette.routing",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "                return",
+                    "            elif match == Match.PARTIAL and partial is None:",
+                    "                partial = route",
+                    "                partial_scope = child_scope",
+                    ""
+                  ],
+                  "pre_context": [
+                    "            # Determine if any route matches the incoming scope,",
+                    "            # and hand over to the matching route if found.",
+                    "            match, child_scope = route.matches(scope)",
+                    "            if match == Match.FULL:",
+                    "                scope.update(child_scope)"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "child_scope": {
+                      "endpoint": "<function trigger_error at 0x7c7702008f40>",
+                      "path_params": {},
+                      "route": "APIRoute(path='/sentry-debug', name='trigger_error', methods=['GET'])"
+                    },
+                    "match": "<Match.FULL: 2>",
+                    "partial": "None",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "route": "APIRoute(path='/sentry-debug', name='trigger_error', methods=['GET'])",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "<fastapi.routing.APIRouter object at 0x7c77032a6240>",
+                    "send": "<function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x7c7700d91620>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/routing.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            await self.app(scope, receive, send)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/routing.py",
+                  "function": "handle",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 288,
+                  "lock": null,
+                  "module": "starlette.routing",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "    def __eq__(self, other: typing.Any) -> bool:",
+                    "        return (",
+                    "            isinstance(other, Route)",
+                    "            and self.path == other.path"
+                  ],
+                  "pre_context": [
+                    "                raise HTTPException(status_code=405, headers=headers)",
+                    "            else:",
+                    "                response = PlainTextResponse(\"Method Not Allowed\", status_code=405, headers=headers)",
+                    "            await response(scope, receive, send)",
+                    "        else:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "self": "APIRoute(path='/sentry-debug', name='trigger_error', methods=['GET'])",
+                    "send": "<function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x7c7700d91620>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/routing.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        await wrap_app_handling_exceptions(app, request)(scope, receive, send)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/routing.py",
+                  "function": "app",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 76,
+                  "lock": null,
+                  "module": "starlette.routing",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "    return app",
+                    "",
+                    "",
+                    "def websocket_session("
+                  ],
+                  "pre_context": [
+                    "",
+                    "        async def app(scope: Scope, receive: Receive, send: Send) -> None:",
+                    "            response = await f(request)",
+                    "            await response(scope, receive, send)",
+                    ""
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app": "<function request_response.<locals>.app.<locals>.app at 0x7c7700d916c0>",
+                    "f": "<function patch_get_request_handler.<locals>._sentry_get_request_handler.<locals>._sentry_app at 0x7c7702009120>",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "send": "<function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x7c7700d91620>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                raise exc",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/_exception_handler.py",
+                  "function": "wrapped_app",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 53,
+                  "lock": null,
+                  "module": "starlette._exception_handler",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "",
+                    "            if response_started:",
+                    "                raise RuntimeError(\"Caught handled exception, but response already started.\") from exc",
+                    "",
+                    "            if is_async_callable(handler):"
+                  ],
+                  "pre_context": [
+                    "",
+                    "            if handler is None:",
+                    "                handler = _lookup_exception_handler(exception_handlers, exc)",
+                    "",
+                    "            if handler is None:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app": "<function request_response.<locals>.app.<locals>.app at 0x7c7700d916c0>",
+                    "conn": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "exception_handlers": {
+                      "<class 'fastapi.exceptions.HTTPException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'fastapi.exceptions.RequestValidationError'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'fastapi.exceptions.WebSocketRequestValidationError'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'starlette.exceptions.HTTPException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'starlette.exceptions.WebSocketException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>"
+                    },
+                    "handler": "None",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "response_started": "False",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,..."
+                        ]
+                      ]
+                    }
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            await app(scope, receive, sender)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/_exception_handler.py",
+                  "function": "wrapped_app",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 42,
+                  "lock": null,
+                  "module": "starlette._exception_handler",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "        except Exception as exc:",
+                    "            handler = None",
+                    "",
+                    "            if isinstance(exc, HTTPException):",
+                    "                handler = status_handlers.get(exc.status_code)"
+                  ],
+                  "pre_context": [
+                    "            if message[\"type\"] == \"http.response.start\":",
+                    "                response_started = True",
+                    "            await send(message)",
+                    "",
+                    "        try:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "app": "<function request_response.<locals>.app.<locals>.app at 0x7c7700d916c0>",
+                    "conn": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "exception_handlers": {
+                      "<class 'fastapi.exceptions.HTTPException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'fastapi.exceptions.RequestValidationError'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'fastapi.exceptions.WebSocketRequestValidationError'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'starlette.exceptions.HTTPException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>",
+                      "<class 'starlette.exceptions.WebSocketException'>": "<function patch_exception_middleware.<locals>._sentry_middleware_init.<locals>._sentry_patched_exception_handler at 0x7c7701f36980>"
+                    },
+                    "handler": "None",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "response_started": "False",
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,..."
+                        ]
+                      ]
+                    }
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/starlette/routing.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "            response = await f(request)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "starlette/routing.py",
+                  "function": "app",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 73,
+                  "lock": null,
+                  "module": "starlette.routing",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "            await response(scope, receive, send)",
+                    "",
+                    "        await wrap_app_handling_exceptions(app, request)(scope, receive, send)",
+                    "",
+                    "    return app"
+                  ],
+                  "pre_context": [
+                    "",
+                    "    async def app(scope: Scope, receive: Receive, send: Send) -> None:",
+                    "        request = Request(scope, receive, send)",
+                    "",
+                    "        async def app(scope: Scope, receive: Receive, send: Send) -> None:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "f": "<function patch_get_request_handler.<locals>._sentry_get_request_handler.<locals>._sentry_app at 0x7c7702009120>",
+                    "receive": "<function _enable_span_for_middleware.<locals>._create_span_call.<locals>._sentry_receive at 0x7c7700d90720>",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "scope": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "send": "<function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x7c7700d905e0>"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/fastapi/routing.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "                    raw_response = await run_endpoint_function(",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "fastapi/routing.py",
+                  "function": "app",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 301,
+                  "lock": null,
+                  "module": "fastapi.routing",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "                        dependant=dependant,",
+                    "                        values=solved_result.values,",
+                    "                        is_coroutine=is_coroutine,",
+                    "                    )",
+                    "                    if isinstance(raw_response, Response):"
+                  ],
+                  "pre_context": [
+                    "                    async_exit_stack=async_exit_stack,",
+                    "                    embed_body_fields=embed_body_fields,",
+                    "                )",
+                    "                errors = solved_result.errors",
+                    "                if not errors:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "actual_response_class": "<class 'fastapi.responses.ORJSONResponse'>",
+                    "async_exit_stack": "<contextlib.AsyncExitStack object at 0x7c7701ecf350>",
+                    "body": "None",
+                    "body_field": "None",
+                    "dependant": "Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], security_requirements=[], name=None, call=<function trigger_error at 0x7c7702008f40>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, security_scopes=None, use_cache=True, path='/sentry-debug', cache_key=(<function trigger_error at 0x7c7702008f40>, ()))",
+                    "errors": [],
+                    "file_stack": "<contextlib.AsyncExitStack object at 0x7c7701ecf380>",
+                    "request": {
+                      "asgi": {
+                        "spec_version": "'2.3'",
+                        "version": "'3.0'"
+                      },
+                      "client": [
+                        "'10.8.0.4'",
+                        "0"
+                      ],
+                      "headers": [
+                        [
+                          "b'connection'",
+                          "b'upgrade'"
+                        ],
+                        [
+                          "b'host'",
+                          "b'slam.10.8.0.6.nip.io'"
+                        ],
+                        [
+                          "b'x-real-ip'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-for'",
+                          "b'10.8.0.4'"
+                        ],
+                        [
+                          "b'x-forwarded-proto'",
+                          "b'http'"
+                        ],
+                        [
+                          "b'user-agent'",
+                          "b'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'"
+                        ],
+                        [
+                          "b'accept'",
+                          "b'application/json'"
+                        ],
+                        [
+                          "b'referer'",
+                          "b'http://slam.10.8.0.6.nip.io/api/docs'"
+                        ],
+                        [
+                          "b'accept-encoding'",
+                          "b'gzip, deflate'"
+                        ],
+                        [
+                          "b'accept-language'",
+                          "b'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'"
+                        ]
+                      ],
+                      "http_version": "'1.1'",
+                      "method": "'GET'",
+                      "root_path": "'/api'",
+                      "scheme": "'http'",
+                      "server": [
+                        "'172.19.0.7'",
+                        "8000"
+                      ],
+                      "state": {},
+                      "type": "'http'"
+                    },
+                    "response": "None",
+                    "solved_result": "SolvedDependency(values={}, errors=[], background_tasks=None, response=<starlette.responses.Response object at 0x7c7701ecf590>, dependency_cache={})"
+                  }
+                },
+                {
+                  "abs_path": "/app/.venv/lib/python3.12/site-packages/fastapi/routing.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "        return await dependant.call(**values)",
+                  "data": {
+                    "client_in_app": false
+                  },
+                  "errors": null,
+                  "filename": "fastapi/routing.py",
+                  "function": "run_endpoint_function",
+                  "image_addr": null,
+                  "in_app": false,
+                  "instruction_addr": null,
+                  "lineno": 212,
+                  "lock": null,
+                  "module": "fastapi.routing",
+                  "package": null,
+                  "platform": null,
+                  "post_context": [
+                    "    else:",
+                    "        return await run_in_threadpool(dependant.call, **values)",
+                    "",
+                    "",
+                    "def get_request_handler("
+                  ],
+                  "pre_context": [
+                    "    # Only called by get_request_handler. Has been split into its own function to",
+                    "    # facilitate profiling endpoints, since inner functions are harder to profile.",
+                    "    assert dependant.call is not None, \"dependant.call must be a function\"",
+                    "",
+                    "    if is_coroutine:"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {
+                    "dependant": "Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], security_requirements=[], name=None, call=<function trigger_error at 0x7c7702008f40>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, security_scopes=None, use_cache=True, path='/sentry-debug', cache_key=(<function trigger_error at 0x7c7702008f40>, ()))",
+                    "is_coroutine": "True",
+                    "values": {}
+                  }
+                },
+                {
+                  "abs_path": "/app/app.py",
+                  "addr_mode": null,
+                  "colno": null,
+                  "context_line": "    _ = 1 / 0",
+                  "data": {
+                    "client_in_app": true
+                  },
+                  "errors": null,
+                  "filename": "app.py",
+                  "function": "trigger_error",
+                  "image_addr": null,
+                  "in_app": true,
+                  "instruction_addr": null,
+                  "lineno": 364,
+                  "lock": null,
+                  "module": "app",
+                  "package": null,
+                  "platform": null,
+                  "post_context": null,
+                  "pre_context": [
+                    "    return {\"Hello\": \"FastAPI\"}",
+                    "",
+                    "",
+                    "@app.get(\"/sentry-debug\")",
+                    "async def trigger_error():"
+                  ],
+                  "raw_function": null,
+                  "source_link": null,
+                  "symbol": null,
+                  "symbol_addr": null,
+                  "trust": null,
+                  "vars": {}
+                }
+              ]
+            },
+            "type": "ZeroDivisionError",
+            "value": "division by zero"
+          }
+        ]
+      },
+      "extra": {
+        "sys.argv": [
+          ".venv/bin/gunicorn",
+          "--config",
+          "gunicorn.conf.py"
+        ]
+      },
+      "fingerprint": [
+        "{{ default }}"
+      ],
+      "grouping_config": {
+        "enhancements": "KLUv_SAd6QAAkwORuGFsbC1wbGF0Zm9ybXM6MjAyNi0wMS0yMJA#KLUv_SAd6QAAkwORuGFsbC1wbGF0Zm9ybXM6MjAyNi0wMS0yMJA#KLUv_SAd6QAAkwORuGFsbC1wbGF0Zm9ybXM6MjAyNi0wMS0yMJA",
+        "id": "newstyle:2026-01-20"
+      },
+      "hashes": [
+        "67ae0f66fbef08de94c57ca34075634b",
+        "d5ae1551879df4d6a093e3a10f3cfc9b"
+      ],
+      "ingest_path": [
+        {
+          "public_key": "XE7QiyuNlja9PZ7I9qJlwQotzecWrUIN91BAO7Q5R38",
+          "version": "26.1.0"
+        }
+      ],
+      "key_id": "4773331",
+      "level": "error",
+      "location": "app.py",
+      "logger": "",
+      "metadata": {
+        "filename": "app.py",
+        "function": "trigger_error",
+        "in_app_frame_mix": "mixed",
+        "type": "ZeroDivisionError",
+        "value": "division by zero"
+      },
+      "modules": {
+        "aenum": "3.1.16",
+        "aiohappyeyeballs": "2.6.1",
+        "aiohttp": "3.12.13",
+        "aiosignal": "1.3.2",
+        "alembic": "1.16.2",
+        "altgraph": "0.17.4",
+        "amqp": "5.3.1",
+        "annotated-types": "0.7.0",
+        "anyio": "4.9.0",
+        "apscheduler": "3.11.0",
+        "attrs": "25.3.0",
+        "bcrypt": "4.3.0",
+        "beautifulsoup4": "4.13.5",
+        "bidict": "0.23.1",
+        "billiard": "4.2.1",
+        "black": "25.1.0",
+        "boto3": "1.39.1",
+        "botocore": "1.39.2",
+        "celery": "5.3.1",
+        "celery-types": "0.23.0",
+        "certifi": "2025.6.15",
+        "cffi": "2.0.0",
+        "charset-normalizer": "3.4.2",
+        "click": "8.2.1",
+        "click-didyoumean": "0.3.1",
+        "click-plugins": "1.1.1.2",
+        "click-repl": "0.3.0",
+        "cryptography": "46.0.3",
+        "cython": "3.1.6",
+        "dependency-injector": "4.48.1",
+        "dnspython": "2.7.0",
+        "ecdsa": "0.19.1",
+        "email_validator": "2.2.0",
+        "fastapi": "0.115.14",
+        "fastapi-cli": "0.0.7",
+        "frozenlist": "1.7.0",
+        "greenlet": "3.2.3",
+        "gunicorn": "23.0.0",
+        "h11": "0.16.0",
+        "httpcore": "1.0.9",
+        "httptools": "0.6.4",
+        "httpx": "0.28.1",
+        "idna": "3.10",
+        "infisicalsdk": "1.0.9",
+        "itsdangerous": "2.2.0",
+        "jinja2": "3.1.6",
+        "jmespath": "1.0.1",
+        "kombu": "5.5.4",
+        "loguru": "0.7.3",
+        "mako": "1.3.10",
+        "markdown-it-py": "3.0.0",
+        "markupsafe": "3.0.2",
+        "mdurl": "0.1.2",
+        "multidict": "6.6.3",
+        "mypy_extensions": "1.1.0",
+        "numpy": "2.3.1",
+        "opencv-python-headless": "4.11.0.86",
+        "orjson": "3.11.3",
+        "packaging": "25.0",
+        "passlib": "1.7.4",
+        "pathspec": "0.12.1",
+        "pillow": "11.3.0",
+        "platformdirs": "4.3.8",
+        "prompt_toolkit": "3.0.51",
+        "propcache": "0.3.2",
+        "psutil": "7.0.0",
+        "psycopg2-binary": "2.9.10",
+        "py-ulid": "1.0.3",
+        "pyasn1": "0.6.1",
+        "pycocotools": "2.0.10",
+        "pycparser": "2.23",
+        "pydantic": "2.11.7",
+        "pydantic-settings": "2.10.1",
+        "pydantic_core": "2.33.2",
+        "pygments": "2.19.2",
+        "pyinstaller": "6.14.1",
+        "pyinstaller-hooks-contrib": "2025.5",
+        "python-dateutil": "2.9.0.post0",
+        "python-dotenv": "1.1.1",
+        "python-engineio": "4.12.3",
+        "python-jose": "3.5.0",
+        "python-multipart": "0.0.20",
+        "python-socketio": "5.14.3",
+        "pyyaml": "6.0.2",
+        "redis": "6.2.0",
+        "requests": "2.32.4",
+        "rich": "14.0.0",
+        "rich-toolkit": "0.14.8",
+        "rsa": "4.9.1",
+        "s3transfer": "0.13.0",
+        "sentry-sdk": "2.37.0",
+        "setuptools": "80.9.0",
+        "shellingham": "1.5.4",
+        "simple-websocket": "1.1.0",
+        "six": "1.17.0",
+        "sniffio": "1.3.1",
+        "soupsieve": "2.8",
+        "sqlalchemy": "2.0.41",
+        "sqlalchemy-json": "0.7.0",
+        "starlette": "0.46.2",
+        "starlette-admin": "0.15.1",
+        "tenacity": "9.1.2",
+        "typer": "0.16.0",
+        "typing-inspection": "0.4.1",
+        "typing_extensions": "4.14.0",
+        "tzdata": "2025.2",
+        "tzlocal": "5.3.1",
+        "urllib3": "2.5.0",
+        "uvicorn": "0.35.0",
+        "uvicorn-worker": "0.3.0",
+        "uvloop": "0.21.0",
+        "vine": "5.1.0",
+        "watchfiles": "1.1.0",
+        "wcwidth": "0.2.13",
+        "websockets": "15.0.1",
+        "wsproto": "1.3.1",
+        "yarl": "1.20.1"
+      },
+      "nodestore_insert": 1770282399.567167,
+      "received": 1770282397.090207,
+      "request": {
+        "api_target": null,
+        "cookies": null,
+        "data": null,
+        "env": null,
+        "fragment": null,
+        "headers": [
+          [
+            "Accept",
+            "application/json"
+          ],
+          [
+            "Accept-Encoding",
+            "gzip, deflate"
+          ],
+          [
+            "Accept-Language",
+            "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+          ],
+          [
+            "Connection",
+            "upgrade"
+          ],
+          [
+            "Cookie",
+            "[Filtered]"
+          ],
+          [
+            "Host",
+            "slam.10.8.0.6.nip.io"
+          ],
+          [
+            "Referer",
+            "http://slam.10.8.0.6.nip.io/api/docs"
+          ],
+          [
+            "User-Agent",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+          ],
+          [
+            "X-Forwarded-For",
+            ""
+          ],
+          [
+            "X-Forwarded-Proto",
+            "http"
+          ],
+          [
+            "X-Real-Ip",
+            ""
+          ]
+        ],
+        "inferred_content_type": null,
+        "method": "GET",
+        "query_string": [],
+        "url": "http://slam.10.8.0.6.nip.io/api/api/sentry-debug"
+      },
+      "sdk": {
+        "integrations": [
+          "aiohttp",
+          "argv",
+          "atexit",
+          "boto3",
+          "celery",
+          "dedupe",
+          "excepthook",
+          "fastapi",
+          "httpx",
+          "logging",
+          "loguru",
+          "modules",
+          "redis",
+          "sqlalchemy",
+          "starlette",
+          "stdlib",
+          "threading"
+        ],
+        "name": "sentry.python.fastapi",
+        "packages": [
+          {
+            "name": "pypi:sentry-sdk",
+            "version": "2.37.0"
+          }
+        ],
+        "version": "2.37.0"
+      },
+      "timestamp": 1770282396.949306,
+      "title": "ZeroDivisionError: division by zero",
+      "transaction": "/sentry-debug",
+      "transaction_info": {
+        "source": "route"
+      },
+      "type": "error",
+      "user": {
+        "geo": {
+          "city": "Namdong-gu",
+          "country_code": "KR",
+          "region": "South Korea",
+          "subdivision": "Incheon"
+        }
+      },
+      "version": "7",
+      "url": "https://sentry.io/api/0/projects/playidealab-cs/slam-be/events/0188096c254749cd8690aa52ea06a224/",
+      "web_url": "https://sentry.io/organizations/playidealab-cs/issues/7244067205/events/0188096c254749cd8690aa52ea06a224/",
+      "issue_url": "https://sentry.io/api/0/organizations/playidealab-cs/issues/7244067205/",
+      "issue_id": "7244067205"
+    },
+    "triggered_rule": "WebHook"
+  },
+  "actor": {
+    "type": "application",
+    "id": "sentry",
+    "name": "Sentry"
+  }
+}
