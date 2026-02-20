@@ -49,6 +49,7 @@ class Worker:
         self.workspace_svc = WorkspaceService()
         self.agent_svc = AgentService()
         self._running = True
+        self.current_job_id: str | None = None  # WorkerManager가 상태 노출에 사용
 
     async def run(self):
         logger.info("Worker started (poll_interval=%ds)", settings.worker_poll_interval)
@@ -67,6 +68,7 @@ class Worker:
                 await asyncio.sleep(settings.worker_poll_interval)
 
     async def _process(self, job: Job) -> None:
+        self.current_job_id = job.id
         logger.info("Processing job %s: %s", job.id, job.title)
 
         # ── 1. PROCESSING 상태로 전환 ────────────────────────────────
@@ -143,6 +145,9 @@ class Worker:
 
             if next_status == JobStatus.PENDING:
                 logger.info("Job %s → retrying (%d/%d)", job.id, new_retry, MAX_RETRY)
+
+        finally:
+            self.current_job_id = None
 
     def stop(self):
         logger.info("Worker stopping...")
