@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 
 import anthropic
-
+from app.core.database import db_context
 from app.core.config import settings
 from app.models.job import Job, JobTaskType
 from app.prompts.fix_error import (
@@ -118,7 +118,7 @@ class AgentService:
             len(plan), response.usage.input_tokens, response.usage.output_tokens,
         )
 
-        from app.core.database import db_context
+
         async with db_context():
             await job_svc.add_tokens(job.id, response.usage.input_tokens, response.usage.output_tokens)
             await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[PLAN]\n{plan}", label="Opus 수정 플랜 수립")
@@ -164,7 +164,6 @@ class AgentService:
                 messages=messages,
             )
 
-            from app.core.database import db_context
             async with db_context():
                 await job_svc.add_tokens(job.id, response.usage.input_tokens, response.usage.output_tokens)
             await self._log_message(job.id, response, job_svc)
@@ -271,7 +270,7 @@ class AgentService:
         else:
             label = block.name
 
-        from app.core.database import db_context
+
         async with db_context():
             await job_svc.add_task(
                 job_id,
@@ -279,7 +278,7 @@ class AgentService:
                 content={
                     "tool": block.name,
                     "input": block.input,
-                    "output": result[:2000],  # DB 크기 제한
+                    "output": result,
                 },
                 label=label,
             )

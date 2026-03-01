@@ -148,7 +148,6 @@ class Worker:
             if next_status == JobStatus.PENDING:
                 logger.info("Job %s → retrying (%d/%d)", job.id, new_retry, MAX_RETRY)
 
-            raise e
         finally:
             self.current_job_id = None
 
