@@ -16,7 +16,12 @@ async def trigger_zero_division():
     """ZeroDivisionError - 0으로 나누기"""
     numerator = 100
     denominator = 0
-    result = numerator / denominator  # ZeroDivisionError
+    try:
+        result = numerator / denominator
+    except ZeroDivisionError as exc:
+        from sentry_sdk import capture_exception
+        capture_exception(exc)
+        return {"error": "ZeroDivisionError", "message": "division by zero", "numerator": numerator, "denominator": denominator}
     return {"result": result}
 
 
@@ -24,7 +29,12 @@ async def trigger_zero_division():
 async def trigger_value_error():
     """ValueError - 잘못된 타입 변환"""
     user_input = "not-a-number"
-    user_id = int(user_input)  # ValueError: invalid literal for int()
+    try:
+        user_id = int(user_input)
+    except ValueError as exc:
+        from sentry_sdk import capture_exception
+        capture_exception(exc)
+        return {"error": "ValueError", "message": str(exc), "input": user_input}
     return {"user_id": user_id}
 
 
@@ -71,6 +81,10 @@ async def trigger_key_error():
         "host": "localhost",
         "port": 5432,
     }
-    # 설정에 없는 키에 접근
-    db_password = config["password"]  # KeyError: 'password'
+    try:
+        db_password = config["password"]
+    except KeyError as exc:
+        from sentry_sdk import capture_exception
+        capture_exception(exc)
+        return {"error": "KeyError", "message": f"Missing key: {exc}", "available_keys": list(config.keys())}
     return {"password": db_password}
