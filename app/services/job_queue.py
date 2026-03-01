@@ -39,6 +39,9 @@ class JobService:
             increment_retry=increment_retry,
         )
 
+    async def add_tokens(self, job_id: str, input_tokens: int, output_tokens: int) -> None:
+        await self.repo.add_tokens(job_id, input_tokens, output_tokens)
+
     async def add_task(
         self,
         job_id: str,

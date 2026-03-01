@@ -2,6 +2,7 @@
 
 import asyncio
 import re
+import subprocess
 from pathlib import Path
 
 from app.core.config import settings
@@ -26,7 +27,7 @@ class WorkspaceService:
     def _authenticated_url(self, repo_url: str, platform: str) -> str:
         """토큰을 URL에 삽입 (https://token@host/...)"""
         if platform == RepoPlatform.GITHUB.value and settings.github_token:
-            return repo_url.replace("https://", f"https://oauth2:{settings.github_token}@")
+            return repo_url.replace("https://", f"https://x-access-token:{settings.github_token}@")
         if platform == RepoPlatform.GITLAB.value and settings.gitlab_token:
             return repo_url.replace("https://", f"https://oauth2:{settings.gitlab_token}@")
         return repo_url
@@ -36,22 +37,26 @@ class WorkspaceService:
         repo_dir = self._repo_dir(repo_url)
         auth_url = self._authenticated_url(repo_url, platform)
 
-        if repo_url in self._cache and repo_dir.exists():
+        if repo_dir.exists():
             await self._run(["git", "-C", str(repo_dir), "fetch", "--all", "--prune"])
         else:
             settings.workspace_dir.mkdir(parents=True, exist_ok=True)
             await self._run(["git", "clone", auth_url, str(repo_dir)])
-            self._cache[repo_url] = repo_dir
+        self._cache[repo_url] = repo_dir
 
         return repo_dir
 
     async def get_default_branch(self, repo_dir: Path) -> str:
-        """원격 기본 브랜치 이름 조회"""
-        output = await self._run(["git", "-C", str(repo_dir), "remote", "show", "origin"])
-        for line in output.splitlines():
-            if "HEAD branch:" in line:
-                return line.split("HEAD branch:")[-1].strip()
-        return "main"
+        """기본 브랜치 이름 조회 (로컬 refs 사용, 네트워크 불필요)"""
+        try:
+            output = await self._run([
+                "git", "-C", str(repo_dir),
+                "symbolic-ref", "refs/remotes/origin/HEAD",
+            ])
+            # "refs/remotes/origin/main" → "main"
+            return output.strip().split("/")[-1]
+        except RuntimeError:
+            return "main"
 
     async def create_work_branch(
         self,
@@ -83,14 +88,14 @@ class WorkspaceService:
         ])
 
     async def _run(self, cmd: list[str]) -> str:
-        proc = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
+        result = await asyncio.to_thread(
+            subprocess.run,
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
-        stdout, stderr = await proc.communicate()
-        if proc.returncode != 0:
+        if result.returncode != 0:
             raise RuntimeError(
-                f"Git command failed: {' '.join(cmd)}\n{stderr.decode().strip()}"
+                f"Git command failed: {' '.join(cmd)}\n{result.stderr.decode().strip()}"
             )
-        return stdout.decode()
+        return result.stdout.decode()

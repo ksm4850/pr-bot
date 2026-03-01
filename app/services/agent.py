@@ -1,18 +1,27 @@
-"""Claude Agent 서비스 - Anthropic SDK 에이전트 루프"""
+"""Claude Agent 서비스 - Opus(플랜) + Sonnet(실행) 2단계"""
 
 import asyncio
 import json
 import logging
+import subprocess
 from pathlib import Path
 
 import anthropic
 
 from app.core.config import settings
 from app.models.job import Job, JobTaskType
-from app.prompts.fix_error import SYSTEM_PROMPT, build_user_prompt
+from app.prompts.fix_error import (
+    EXECUTOR_SYSTEM_PROMPT,
+    PLANNER_SYSTEM_PROMPT,
+    build_execute_prompt,
+    build_plan_prompt,
+)
 from app.services.job_queue import JobService
 
 logger = logging.getLogger(__name__)
+
+PLANNER_MODEL = "claude-opus-4-6"
+EXECUTOR_MODEL = "claude-sonnet-4-6"
 
 MAX_TURNS = 30
 BASH_TIMEOUT = 60  # seconds
@@ -74,45 +83,110 @@ class AgentService:
         work_branch: str,
         job_svc: JobService,
     ) -> None:
-        """에이전트 루프 실행. 실패 시 예외 raise."""
-        user_prompt = build_user_prompt(job, repo_dir, work_branch)
+        """Opus로 플랜 수립 → Sonnet으로 실행. 실패 시 예외 raise."""
+        logger.info("[agent] Phase 1: Planning (Opus) for job %s", job.id)
+        plan = await self._plan(job, repo_dir, job_svc)
+
+        logger.info("[agent] Phase 2: Executing (Sonnet) for job %s", job.id)
+        summary = await self._execute(job, repo_dir, work_branch, plan, job_svc)
+
+        if summary:
+            logger.info("[agent] Saving summary for job %s", job.id)
+            from app.core.database import db_context
+            async with db_context():
+                await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[SUMMARY]\n{summary}")
+
+    # ── Phase 1: Planner (Opus) ───────────────────────────────────
+
+    async def _plan(self, job: Job, repo_dir: Path, job_svc: JobService) -> str:
+        """Opus가 에러를 분석하고 수정 플랜 반환 (도구 없음)"""
+        file_content = self._read_source_file(job, repo_dir)
+        user_prompt = build_plan_prompt(job, file_content)
+
+        response = await self._client.messages.create(
+            model=PLANNER_MODEL,
+            max_tokens=4096,
+            system=PLANNER_SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+
+        plan = "\n".join(
+            block.text for block in response.content if block.type == "text"
+        )
+        logger.info(
+            "[planner] Plan created (%d chars) | tokens: %d in / %d out",
+            len(plan), response.usage.input_tokens, response.usage.output_tokens,
+        )
+
+        from app.core.database import db_context
+        async with db_context():
+            await job_svc.add_tokens(job.id, response.usage.input_tokens, response.usage.output_tokens)
+            await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[PLAN]\n{plan}")
+
+        return plan
+
+    def _read_source_file(self, job: Job, repo_dir: Path) -> str | None:
+        """에러 발생 파일 내용 읽기 (Opus 컨텍스트용)"""
+        if not job.filename:
+            return None
+        filepath = Path(job.filename.replace("\\", "/"))
+        full_path = repo_dir / filepath
+        if not full_path.exists():
+            return None
+        try:
+            return full_path.read_text(encoding="utf-8")
+        except Exception:
+            return None
+
+    # ── Phase 2: Executor (Sonnet) ────────────────────────────────
+
+    async def _execute(
+        self,
+        job: Job,
+        repo_dir: Path,
+        work_branch: str,
+        plan: str,
+        job_svc: JobService,
+    ) -> str:
+        """Sonnet이 플랜을 받아 도구로 코드 수정 + 커밋. 완료 요약 반환."""
+        user_prompt = build_execute_prompt(job, repo_dir, work_branch, plan)
         messages: list[anthropic.types.MessageParam] = [
             {"role": "user", "content": user_prompt},
         ]
-
-        logger.info(f"[agent] Starting agent for job {job.id}")
+        last_text = ""
 
         for turn in range(MAX_TURNS):
             response = await self._client.messages.create(
-                model="claude-opus-4-6",
+                model=EXECUTOR_MODEL,
                 max_tokens=8096,
-                system=SYSTEM_PROMPT,
+                system=EXECUTOR_SYSTEM_PROMPT,
                 tools=TOOLS,
                 messages=messages,
             )
 
-            # 에이전트 메시지 로그
+            from app.core.database import db_context
+            async with db_context():
+                await job_svc.add_tokens(job.id, response.usage.input_tokens, response.usage.output_tokens)
             await self._log_message(job.id, response, job_svc)
-
             messages.append({"role": "assistant", "content": response.content})
 
+            texts = [b.text for b in response.content if b.type == "text" and b.text]
+            if texts:
+                last_text = "\n".join(texts)
+
             if response.stop_reason == "end_turn":
-                logger.info(f"[agent] Completed in {turn + 1} turns")
-                return
+                logger.info("[executor] Completed in %d turns", turn + 1)
+                return last_text
 
             if response.stop_reason != "tool_use":
                 raise RuntimeError(f"Unexpected stop_reason: {response.stop_reason}")
 
-            # 도구 실행
             tool_results: list[anthropic.types.ToolResultBlockParam] = []
             for block in response.content:
                 if block.type != "tool_use":
                     continue
-
                 result = await self._execute_tool(block.name, block.input, repo_dir)
-
                 await self._log_tool(job.id, block, result, job_svc)
-
                 tool_results.append({
                     "type": "tool_result",
                     "tool_use_id": block.id,
@@ -137,19 +211,20 @@ class AgentService:
 
     async def _run_bash(self, command: str, cwd: Path, timeout: int) -> str:
         try:
-            proc = await asyncio.create_subprocess_shell(
+            result = await asyncio.to_thread(
+                subprocess.run,
                 command,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.STDOUT,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 cwd=cwd,
+                timeout=timeout,
             )
-            stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=timeout)
-            output = stdout.decode(errors="replace")
-            if proc.returncode != 0:
-                return f"[exit {proc.returncode}]\n{output}"
+            output = result.stdout.decode(errors="replace")
+            if result.returncode != 0:
+                return f"[exit {result.returncode}]\n{output}"
             return output or "(no output)"
-        except asyncio.TimeoutError:
-            proc.kill()
+        except subprocess.TimeoutExpired:
             return f"[timeout after {timeout}s]"
         except Exception as e:
             return f"[error] {e}"

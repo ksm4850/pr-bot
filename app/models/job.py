@@ -61,6 +61,10 @@ class JobModel(Base):
     work_branch: Mapped[str | None] = mapped_column(String(255), nullable=True)  # 에이전트 작업 브랜치
     error_log: Mapped[str | None] = mapped_column(Text, nullable=True)
 
+    # 토큰 사용량 (Opus + Sonnet 누적)
+    input_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    output_tokens: Mapped[int] = mapped_column(Integer, default=0)
+
     # 메타
     retry_count: Mapped[int] = mapped_column(Integer, default=0)
     source_url: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -115,6 +119,8 @@ class Job(BaseModel):
     stacktrace: str | None = None
     work_branch: str | None = None
     error_log: str | None = None
+    input_tokens: int = 0
+    output_tokens: int = 0
     retry_count: int = 0
     source_url: str | None = None
     raw_payload: str | None = None
@@ -141,6 +147,8 @@ class Job(BaseModel):
             stacktrace=db.stacktrace,
             work_branch=db.work_branch,
             error_log=db.error_log,
+            input_tokens=db.input_tokens,
+            output_tokens=db.output_tokens,
             retry_count=db.retry_count,
             source_url=db.source_url,
             raw_payload=db.raw_payload,

@@ -120,6 +120,7 @@ class Worker:
             error_msg = str(e)
             logger.error("Job %s failed: %s", job.id, error_msg)
 
+            logger.exception("Job %s exception detail:", job.id)
             fatal = isinstance(e, FATAL_ERRORS) or _is_billing_error(e)
             if fatal:
                 logger.critical("Fatal error (no retry): %s", error_msg)
@@ -146,6 +147,7 @@ class Worker:
             if next_status == JobStatus.PENDING:
                 logger.info("Job %s → retrying (%d/%d)", job.id, new_retry, MAX_RETRY)
 
+            raise e
         finally:
             self.current_job_id = None
 

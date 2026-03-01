@@ -134,6 +134,14 @@ class JobRepository(BaseRepository):
         await self.session.flush()
         return db_task
 
+    async def add_tokens(self, job_id: str, input_tokens: int, output_tokens: int) -> None:
+        """토큰 사용량 누적"""
+        db_job = await self.get(job_id)
+        if db_job:
+            db_job.input_tokens += input_tokens
+            db_job.output_tokens += output_tokens
+            await self.session.flush()
+
     async def list_tasks(self, job_id: str) -> list[JobTaskModel]:
         """job의 작업 히스토리 순서대로 조회"""
         result = await self.session.execute(

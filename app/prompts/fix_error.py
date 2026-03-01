@@ -6,85 +6,131 @@ from pathlib import Path
 from app.models.job import Job
 
 
-SYSTEM_PROMPT = """\
-You are an expert software engineer tasked with fixing bugs in a codebase.
-You have been given information about an error that occurred in production.
-Your job is to:
-1. Analyze the error and stacktrace
-2. Locate the root cause in the source code
-3. Implement a minimal, correct fix
-4. Commit the fix with a clear commit message
+# ── Planner (Opus) ────────────────────────────────────────────────
+
+PLANNER_SYSTEM_PROMPT = """\
+You are a senior software engineer specializing in debugging production errors.
+
+Your task:
+1. Analyze the error report and source code carefully
+2. Identify the root cause precisely
+3. Write a concrete fix plan
+
+Your fix plan must include:
+- Root cause (1-2 sentences)
+- Exact file path and line numbers to change
+- The specific code change (show before/after)
+- Why this fixes the issue
 
 Rules:
-- Only fix the specific bug reported. Do not refactor or improve unrelated code.
-- Use the bash tool to read files, run tests, and commit changes.
-- If you cannot reproduce or understand the issue after investigation, commit a comment explaining what you found.
-- Always end with a git commit. The branch is already created — just commit your changes.
-- Do NOT push to remote. The system will handle that.
-- Commit message format: "fix: <short description>\\n\\n<details if needed>"
+- Always plan to fix the actual bug. Never suggest skipping, excluding, or commenting out the broken code.
+- Do NOT judge whether the code is "test code" or "intentional" — production threw this error, so it must be fixed.
+- Be precise and specific. Another engineer will implement your plan exactly as written.
+- Do NOT implement the fix yourself — only plan it.
 """
 
 
-def build_user_prompt(job: Job, repo_dir: Path, work_branch: str) -> str:
-    """Job 정보로 에이전트 유저 프롬프트 생성"""
-    frames_text = ""
-    if job.stacktrace:
-        try:
-            frames = json.loads(job.stacktrace)
-            lines = []
-            for f in frames:
-                loc = f.get("filename", "?")
-                if f.get("lineno"):
-                    loc += f":{f['lineno']}"
-                fn = f.get("function", "")
-                ctx = f.get("context_line", "").strip()
-                lines.append(f"  {loc} in {fn}()" + (f"\n    > {ctx}" if ctx else ""))
-            frames_text = "\n".join(lines)
-        except Exception:
-            frames_text = job.stacktrace
-
+def build_plan_prompt(job: Job, file_content: str | None) -> str:
+    """Opus용 플랜 프롬프트: 에러 정보 + 파일 내용"""
     parts = [
-        f"## Error Report",
-        f"",
+        "## Error Report",
+        "",
         f"**Title**: {job.title}",
-        f"**Source**: {job.source.value} (issue: {job.source_issue_id})",
-        f"**Environment**: {job.environment or 'unknown'}",
-        f"**Level**: {job.level or 'error'}",
-        f"",
         f"**Exception**: {job.exception_type or 'Unknown'}",
         f"**Message**: {job.message or '(no message)'}",
+        f"**Environment**: {job.environment or 'unknown'}",
     ]
 
     if job.transaction:
         parts += [f"**Endpoint**: {job.transaction}"]
 
     parts += [
-        f"",
-        f"**Error Location**:",
+        "",
+        "**Error Location**:",
         f"- File: `{job.filename or 'unknown'}`",
         f"- Line: {job.lineno or 'unknown'}",
         f"- Function: `{job.function or 'unknown'}`",
     ]
 
-    if frames_text:
+    if job.stacktrace:
+        try:
+            frames = json.loads(job.stacktrace)
+            # innermost (actual error) frame만 상세히 보여줌
+            inner = frames[-1] if frames else None
+            if inner:
+                pre = "\n".join(inner.get("pre_context") or [])
+                ctx = inner.get("context_line", "")
+                post = "\n".join(inner.get("post_context") or [])
+                parts += [
+                    "",
+                    "**Code Context** (lines around the error):",
+                    "```python",
+                    pre,
+                    f">>> {ctx}  # ← error here",
+                    post,
+                    "```",
+                ]
+        except Exception:
+            pass
+
+    if file_content:
         parts += [
-            f"",
-            f"**Stacktrace** (in-app frames only, innermost last):",
-            f"```",
-            frames_text,
-            f"```",
+            "",
+            f"**Full Source File** (`{job.filename}`):",
+            "```python",
+            file_content,
+            "```",
         ]
 
-    if job.source_url:
-        parts += [f"", f"**Source URL**: {job.source_url}"]
-
     parts += [
-        f"",
-        f"## Workspace",
-        f"- Repository: `{repo_dir}`",
-        f"- Branch: `{work_branch}` (already checked out)",
-        f"",
-        f"Please investigate, fix the bug, and commit your changes.",
+        "",
+        "## Task",
+        "Analyze the error above and write a precise fix plan.",
+        "Do NOT write code to fix it — only describe what needs to change and why.",
     ]
 
     return "\n".join(parts)
+
+
+# ── Executor (Sonnet) ─────────────────────────────────────────────
+
+EXECUTOR_SYSTEM_PROMPT = """\
+You are an expert software engineer implementing a bug fix.
+
+You have been given an error report and a fix plan from a senior engineer.
+
+Your task:
+1. Follow the fix plan precisely
+2. Use the bash tool to read files if you need clarification
+3. Make the minimal required code changes using write_file or bash
+4. Commit with a clear message
+
+Rules:
+- Always fix the actual bug in the code. Never skip, exclude, or comment out the problematic code.
+- Do NOT judge whether the code is "test code", "intentional", or "expected to fail" — just fix the error.
+- Only fix the specific bug. Do not refactor or change unrelated code.
+- Always end with a git commit. The branch is already checked out.
+- Do NOT push to remote. The system handles that.
+- Commit message format: "fix: <short description>"
+"""
+
+
+def build_execute_prompt(job: Job, repo_dir: Path, work_branch: str, plan: str) -> str:
+    """Sonnet용 실행 프롬프트: 에러 요약 + Opus 플랜"""
+    return "\n".join([
+        "## Error Summary",
+        "",
+        f"**Title**: {job.title}",
+        f"**File**: `{job.filename or 'unknown'}` line {job.lineno or '?'}",
+        f"**Exception**: {job.exception_type}: {job.message or ''}",
+        "",
+        "## Fix Plan (from senior engineer)",
+        "",
+        plan,
+        "",
+        "## Workspace",
+        f"- Repository root: `{repo_dir}`",
+        f"- Branch: `{work_branch}` (already checked out)",
+        "",
+        "Implement the fix plan above and commit your changes.",
+    ])

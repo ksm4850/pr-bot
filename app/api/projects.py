@@ -23,7 +23,7 @@ async def create_project(body: CreateProjectRequest) -> Project:
             source=body.source,
             source_project_id=body.source_project_id,
             repo_url=body.repo_url,
-            repo_platform=body.repo_platform.value,
+            repo_platform=body.repo_platform,
         )
     except ValueError as e:
         raise HTTPException(status_code=409, detail=str(e))
