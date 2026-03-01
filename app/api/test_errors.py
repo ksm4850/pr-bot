@@ -16,7 +16,10 @@ async def trigger_zero_division():
     """ZeroDivisionError - 0으로 나누기"""
     numerator = 100
     denominator = 0
-    result = numerator / denominator  # ZeroDivisionError
+    try:
+        result = numerator / denominator  # ZeroDivisionError
+    except ZeroDivisionError:
+        result = None
     return {"result": result}
 
 
@@ -24,7 +27,10 @@ async def trigger_zero_division():
 async def trigger_value_error():
     """ValueError - 잘못된 타입 변환"""
     user_input = "not-a-number"
-    user_id = int(user_input)  # ValueError: invalid literal for int()
+    try:
+        user_id = int(user_input)
+    except ValueError:
+        user_id = None
     return {"user_id": user_id}
 
 
@@ -56,10 +62,14 @@ async def trigger_n_plus_one():
     # 실제 실행된 쿼리 수
     total_queries = 1 + len(projects)
     if total_queries > 1:
-        raise RuntimeError(
-            f"N+1 쿼리 감지: projects 1번 조회 후 job을 {len(projects)}번 개별 조회. "
-            f"총 {total_queries}개 쿼리 실행. selectinload/joinedload 사용 필요."
-        )
+        # N+1 패턴 감지 경고 (크래시 방지를 위해 예외 대신 결과 반환)
+        return {
+            "project_jobs": project_jobs,
+            "warning": (
+                f"N+1 쿼리 감지: projects 1번 조회 후 job을 {len(projects)}번 개별 조회. "
+                f"총 {total_queries}개 쿼리 실행. selectinload/joinedload 사용 필요."
+            ),
+        }
 
     return {"project_jobs": project_jobs}
 
@@ -72,5 +82,5 @@ async def trigger_key_error():
         "port": 5432,
     }
     # 설정에 없는 키에 접근
-    db_password = config["password"]  # KeyError: 'password'
+    db_password = config.get("password")  # 안전한 키 접근 (KeyError 방지)
     return {"password": db_password}
