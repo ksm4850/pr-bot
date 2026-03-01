@@ -110,6 +110,7 @@ class JobRepository(BaseRepository):
         job_id: str,
         type: JobTaskType,
         content: dict | str | None = None,
+        label: str | None = None,
     ) -> JobTaskModel:
         """에이전트 작업 이벤트 기록"""
         # 현재 job의 마지막 sequence 조회
@@ -127,6 +128,7 @@ class JobRepository(BaseRepository):
             job_id=job_id,
             sequence=sequence,
             type=type.value,
+            label=label,
             content=json.dumps(content, ensure_ascii=False) if isinstance(content, dict) else content,
             created_at=datetime.now(UTC),
         )

@@ -74,7 +74,7 @@ class Worker:
         # ── 1. PROCESSING 상태로 전환 ────────────────────────────────
         async with db_context():
             await self.job_svc.update_job_status(job.id, JobStatus.PROCESSING)
-            await self.job_svc.add_task(job.id, JobTaskType.STATUS, content="processing")
+            await self.job_svc.add_task(job.id, JobTaskType.STATUS, content="processing", label="작업 처리 시작")
 
         try:
             # ── 2. 프로젝트 정보 조회 (repo_url) ──────────────────────
@@ -112,7 +112,7 @@ class Worker:
                     JobStatus.DONE,
                     work_branch=work_branch,
                 )
-                await self.job_svc.add_task(job.id, JobTaskType.STATUS, content="done")
+                await self.job_svc.add_task(job.id, JobTaskType.STATUS, content="done", label="작업 완료 — PR 브랜치 생성됨")
 
             logger.info("Job %s done → branch: %s", job.id, work_branch)
 
@@ -142,6 +142,7 @@ class Worker:
                     job.id,
                     JobTaskType.ERROR,
                     content={"error": error_msg, "retry": new_retry, "fatal": fatal},
+                    label=f"{'치명적 오류' if fatal else f'오류 (재시도 {new_retry}/{MAX_RETRY})'}: {error_msg[:60]}",
                 )
 
             if next_status == JobStatus.PENDING:

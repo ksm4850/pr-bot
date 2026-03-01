@@ -47,8 +47,9 @@ class JobService:
         job_id: str,
         type: JobTaskType,
         content: dict | str | None = None,
+        label: str | None = None,
     ) -> JobTask:
-        db_task = await self.repo.add_task(job_id, type, content)
+        db_task = await self.repo.add_task(job_id, type, content, label=label)
         return JobTask.from_orm(db_task)
 
     async def list_tasks(self, job_id: str) -> list[JobTask]:

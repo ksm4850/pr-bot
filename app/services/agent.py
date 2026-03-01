@@ -94,7 +94,7 @@ class AgentService:
             logger.info("[agent] Saving summary for job %s", job.id)
             from app.core.database import db_context
             async with db_context():
-                await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[SUMMARY]\n{summary}")
+                await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[SUMMARY]\n{summary}", label="최종 완료 요약")
 
     # ── Phase 1: Planner (Opus) ───────────────────────────────────
 
@@ -121,7 +121,7 @@ class AgentService:
         from app.core.database import db_context
         async with db_context():
             await job_svc.add_tokens(job.id, response.usage.input_tokens, response.usage.output_tokens)
-            await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[PLAN]\n{plan}")
+            await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[PLAN]\n{plan}", label="Opus 수정 플랜 수립")
 
         return plan
 
@@ -246,12 +246,15 @@ class AgentService:
     ) -> None:
         texts = [b.text for b in response.content if b.type == "text" and b.text]
         if texts:
+            full_text = "\n".join(texts)
+            first_line = full_text.split("\n")[0].strip()[:80]
             from app.core.database import db_context
             async with db_context():
                 await job_svc.add_task(
                     job_id,
                     JobTaskType.MESSAGE,
-                    content="\n".join(texts),
+                    content=full_text,
+                    label=first_line or "Sonnet 응답",
                 )
 
     async def _log_tool(
@@ -261,6 +264,13 @@ class AgentService:
         result: str,
         job_svc: JobService,
     ) -> None:
+        if block.name == "bash":
+            label = f"bash: {str(block.input.get('command', ''))[:70]}"
+        elif block.name == "write_file":
+            label = f"파일 작성: {block.input.get('path', '')}"
+        else:
+            label = block.name
+
         from app.core.database import db_context
         async with db_context():
             await job_svc.add_task(
@@ -271,4 +281,5 @@ class AgentService:
                     "input": block.input,
                     "output": result[:2000],  # DB 크기 제한
                 },
+                label=label,
             )

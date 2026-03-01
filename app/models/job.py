@@ -91,6 +91,7 @@ class JobTaskModel(Base):
     job_id: Mapped[str] = mapped_column(String(36), ForeignKey("jobs.id"), nullable=False)
     sequence: Mapped[int] = mapped_column(Integer, nullable=False)       # job 내 순서
     type: Mapped[str] = mapped_column(String(20), nullable=False)        # JobTaskType
+    label: Mapped[str | None] = mapped_column(String(200), nullable=True)  # 사람이 읽을 수 있는 요약 (AI가 저장 시점에 생성)
     content: Mapped[str | None] = mapped_column(Text, nullable=True)     # JSON: 도구명/입력/출력/메시지 등
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(UTC))
 
@@ -162,6 +163,7 @@ class JobTask(BaseModel):
     job_id: str
     sequence: int
     type: JobTaskType
+    label: str | None = None    # 사람이 읽을 수 있는 요약
     content: str | None = None  # JSON string
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
@@ -172,6 +174,7 @@ class JobTask(BaseModel):
             job_id=db.job_id,
             sequence=db.sequence,
             type=JobTaskType(db.type),
+            label=db.label,
             content=db.content,
             created_at=db.created_at,
         )

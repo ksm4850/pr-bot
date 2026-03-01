@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PR-Bot</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    header {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      border-bottom: 1px solid #21262d;
+      background: #161b22;
+    }
+    header h1 { font-size: 17px; font-weight: 600; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #3fb950; flex-shrink: 0; }
+    .dot.off { background: #f85149; }
+    .worker-status {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #8b949e;
+    }
+    .ctrl-btn {
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid #30363d;
+      background: #21262d;
+      color: #e6edf3;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .ctrl-btn:hover:not(:disabled) { background: #30363d; }
+    .ctrl-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .ctrl-btn.danger { border-color: #6e2c2c; color: #f85149; }
+    .ctrl-btn.danger:hover:not(:disabled) { background: #2d0f0f; }
+
+    /* ── Nav ── */
+    .nav {
+      flex-shrink: 0;
+      display: flex;
+      padding: 0 24px;
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+    }
+    .nav button {
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #8b949e;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .nav button.active { color: #e6edf3; border-bottom-color: #388bfd; }
+    .nav button:hover:not(.active) { color: #c9d1d9; }
+
+    /* ── Pages ── */
+    .page { display: none; flex: 1; min-height: 0; }
+    .page.active { display: flex; flex-direction: column; }
+
+    /* ── Jobs layout ── */
+    #page-jobs main {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #21262d;
+      background: #161b22;
+      min-height: 0;
+    }
+    .sidebar-top { flex-shrink: 0; }
+    .sidebar-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .filter-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #21262d;
+    }
+    .filter-tabs button {
+      padding: 3px 10px;
+      border-radius: 10px;
+      border: 1px solid #30363d;
+      background: transparent;
+      color: #8b949e;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .filter-tabs button.active { border-color: #388bfd; color: #388bfd; background: #0d1f3c; }
+    .filter-tabs button:hover:not(.active) { background: #21262d; color: #e6edf3; }
+
+    .job-list { flex: 1; overflow-y: auto; }
+    .job-list::-webkit-scrollbar { width: 3px; }
+    .job-list::-webkit-scrollbar-thumb { background: #30363d; }
+
+    .job-item {
+      padding: 11px 14px;
+      border-bottom: 1px solid #21262d;
+      cursor: pointer;
+    }
+    .job-item:hover { background: #1c2128; }
+    .job-item.selected { background: #1c2128; border-left: 2px solid #388bfd; padding-left: 12px; }
+    .job-item-title {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.4;
+      margin-bottom: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .job-item-meta { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+
+    /* ── Detail panel ── */
+    .detail {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .detail::-webkit-scrollbar { width: 3px; }
+    .detail::-webkit-scrollbar-thumb { background: #30363d; }
+
+    .detail-placeholder {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #8b949e;
+      font-size: 13px;
+    }
+    .detail-placeholder .icon { font-size: 36px; }
+
+    /* ── Cards ── */
+    .card {
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      background: #161b22;
+      /* NO overflow:hidden — it clips expanded task content */
+    }
+    .card-title {
+      padding: 10px 14px;
+      border-bottom: 1px solid #21262d;
+      font-size: 11px;
+      font-weight: 600;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border-radius: 8px 8px 0 0;
+      background: #161b22;
+    }
+    .card-body { padding: 14px; }
+
+    /* ── Field grid ── */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 7px 10px;
+      font-size: 13px;
+    }
+    .fl { color: #8b949e; }
+    .fv { color: #e6edf3; word-break: break-all; }
+    .fv a { color: #388bfd; text-decoration: none; }
+    .fv a:hover { text-decoration: underline; }
+    code { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; background: #21262d; padding: 1px 5px; border-radius: 4px; }
+
+    /* ── Task list ── */
+    .task-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .task-item { border: 1px solid #21262d; border-radius: 6px; }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      background: #1c2128;
+      cursor: pointer;
+      border-radius: 6px;
+      user-select: none;
+      font-size: 12px;
+    }
+    .task-item.open .task-header { border-radius: 6px 6px 0 0; }
+    .task-header:hover { background: #21262d; }
+
+    .task-seq { color: #8b949e; font-size: 11px; flex-shrink: 0; min-width: 24px; }
+    .task-preview {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #8b949e;
+    }
+    .task-arrow { color: #8b949e; font-size: 10px; flex-shrink: 0; }
+
+    .task-body {
+      padding: 12px;
+      border-top: 1px solid #21262d;
+      background: #0d1117;
+      border-radius: 0 0 6px 6px;
+    }
+    .task-body pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      color: #e6edf3;
+    }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .badge-pending    { background: #4d2d00; color: #e3b341; }
+    .badge-processing { background: #012148; color: #388bfd; }
+    .badge-done       { background: #0d2e1f; color: #3fb950; }
+    .badge-failed     { background: #2d0f0f; color: #f85149; }
+    .badge-tool_use   { background: #1f1d38; color: #bc8cff; }
+    .badge-message    { background: #0d2728; color: #39d353; }
+    .badge-error      { background: #2d0f0f; color: #f85149; }
+    .badge-status     { background: #21262d; color: #8b949e; }
+
+    /* ── Projects ── */
+    .projects-toolbar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      border-bottom: 1px solid #21262d;
+      background: #161b22;
+    }
+    .projects-toolbar h2 { font-size: 13px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: .5px; }
+    #page-projects > .scroll-wrap {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+    }
+    .project-card {
+      background: #161b22;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .project-card h3 { font-size: 14px; font-weight: 600; }
+    .project-card .meta { font-size: 12px; color: #8b949e; display: flex; flex-direction: column; gap: 4px; }
+    .project-card .meta a { color: #388bfd; text-decoration: none; }
+    .project-card-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px solid #21262d;
+    }
+
+    /* ── Modal ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      width: 420px;
+      max-width: calc(100vw - 32px);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal h3 { font-size: 15px; font-weight: 600; }
+    .form-row { display: flex; flex-direction: column; gap: 6px; }
+    .form-row label { font-size: 12px; color: #8b949e; }
+    .form-row input, .form-row select {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: #e6edf3;
+      font-size: 13px;
+      padding: 7px 10px;
+      outline: none;
+      width: 100%;
+    }
+    .form-row input:focus, .form-row select:focus { border-color: #388bfd; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+    /* ── Misc ── */
+    .ts { font-size: 11px; color: #8b949e; }
+    .empty { color: #8b949e; font-size: 13px; padding: 20px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="dot" id="workerDot"></div>
+  <h1>PR-Bot</h1>
+  <div class="worker-status">
+    Worker: <strong id="workerStatusText">—</strong>
+    &nbsp;·&nbsp;
+    Job: <strong id="workerJobText">idle</strong>
+    &nbsp;
+    <button class="ctrl-btn" id="btnStart" onclick="workerStart()" disabled>Start</button>
+    <button class="ctrl-btn danger" id="btnStop" onclick="workerStop()" disabled>Stop</button>
+  </div>
+</header>
+
+<nav class="nav">
+  <button class="active" onclick="switchTab('jobs', this)">Jobs</button>
+  <button onclick="switchTab('projects', this)">Projects</button>
+</nav>
+
+<!-- Jobs -->
+<div class="page active" id="page-jobs">
+  <main>
+    <aside>
+      <div class="sidebar-top">
+        <div class="sidebar-header">
+          <span>Jobs</span>
+          <span class="ts" id="jobsUpdated"></span>
+        </div>
+        <div class="filter-tabs">
+          <button class="active" onclick="setFilter(null, this)">All</button>
+          <button onclick="setFilter('pending', this)">Pending</button>
+          <button onclick="setFilter('processing', this)">Processing</button>
+          <button onclick="setFilter('done', this)">Done</button>
+          <button onclick="setFilter('failed', this)">Failed</button>
+        </div>
+      </div>
+      <div class="job-list" id="jobList"></div>
+    </aside>
+
+    <div class="detail" id="jobDetail">
+      <div class="detail-placeholder">
+        <div class="icon">🤖</div>
+        <div>Job을 선택하세요</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Projects -->
+<div class="page" id="page-projects">
+  <div class="projects-toolbar">
+    <h2>Projects</h2>
+    <button class="ctrl-btn" onclick="openAddProjectModal()">+ 프로젝트 추가</button>
+  </div>
+  <div class="scroll-wrap">
+    <div class="projects-grid" id="projectsGrid">
+      <div class="empty">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Project Modal -->
+<div class="modal-backdrop" id="addProjectModal" onclick="handleModalBackdrop(event)">
+  <div class="modal">
+    <h3>프로젝트 추가</h3>
+    <div class="form-row">
+      <label>에러 소스</label>
+      <select id="fp-source">
+        <option value="sentry">Sentry</option>
+        <option value="cloudwatch">CloudWatch</option>
+        <option value="datadog">Datadog</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Source Project ID <span style="color:#8b949e">(Sentry의 경우 project 숫자 ID)</span></label>
+      <input id="fp-source-project-id" type="text" placeholder="예: 4509981525278720" />
+    </div>
+    <div class="form-row">
+      <label>Repository URL</label>
+      <input id="fp-repo-url" type="text" placeholder="https://github.com/org/repo" />
+    </div>
+    <div class="form-row">
+      <label>Git 플랫폼</label>
+      <select id="fp-platform">
+        <option value="github">GitHub</option>
+        <option value="gitlab">GitLab</option>
+      </select>
+    </div>
+    <div id="addProjectError" style="color:#f85149;font-size:12px;display:none"></div>
+    <div class="modal-actions">
+      <button class="ctrl-btn" onclick="closeAddProjectModal()">취소</button>
+      <button class="ctrl-btn" id="btnAddProjectSubmit" onclick="submitAddProject()" style="border-color:#388bfd;color:#388bfd">추가</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentFilter = null;
+  let selectedJobId  = null;
+  let cachedJob      = null;
+  let cachedTasks    = null;
+  let expandedTasks  = new Set();
+
+  // ── Tab ──────────────────────────────────────────────────────────
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + tab).classList.add('active');
+    btn.classList.add('active');
+    if (tab === 'projects') loadProjects();
+  }
+
+  // ── Worker ───────────────────────────────────────────────────────
+  async function pollWorker() {
+    try {
+      const d = await fetch('/worker/status').then(r => r.json());
+      const running = d.status === 'running';
+      document.getElementById('workerDot').className = 'dot' + (running ? '' : ' off');
+      document.getElementById('workerStatusText').textContent = d.status;
+      document.getElementById('workerJobText').textContent =
+        d.current_job_id ? d.current_job_id.slice(0, 8) + '…' : 'idle';
+      document.getElementById('btnStart').disabled = running;
+      document.getElementById('btnStop').disabled  = !running;
+    } catch {}
+  }
+
+  async function workerStart() {
+    document.getElementById('btnStart').disabled = true;
+    const r = await fetch('/worker/start', { method: 'POST' });
+    if (!r.ok) alert((await r.json()).detail || 'Start 실패');
+    await pollWorker();
+  }
+
+  async function workerStop() {
+    document.getElementById('btnStop').disabled = true;
+    const r = await fetch('/worker/stop', { method: 'POST' });
+    if (!r.ok) alert((await r.json()).detail || 'Stop 실패');
+    await pollWorker();
+  }
+
+  // ── Jobs list ─────────────────────────────────────────────────────
+  function setFilter(status, btn) {
+    currentFilter = status;
+    document.querySelectorAll('.filter-tabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadJobs();
+  }
+
+  async function loadJobs() {
+    const url = '/jobs' + (currentFilter ? `?status=${currentFilter}` : '');
+    try {
+      const jobs = await fetch(url).then(r => r.json());
+      renderJobList(jobs);
+      document.getElementById('jobsUpdated').textContent =
+        new Date().toLocaleTimeString('ko-KR');
+    } catch {
+      document.getElementById('jobList').innerHTML = '<div class="empty">로드 실패</div>';
+    }
+  }
+
+  function renderJobList(jobs) {
+    const el = document.getElementById('jobList');
+    if (!jobs.length) { el.innerHTML = '<div class="empty">없음</div>'; return; }
+    el.innerHTML = jobs.map(j => `
+      <div class="job-item${j.id === selectedJobId ? ' selected' : ''}" onclick="selectJob('${j.id}')">
+        <div class="job-item-title">${esc(j.title)}</div>
+        <div class="job-item-meta">
+          ${badge(j.status)}
+          <span class="ts">${timeAgo(j.created_at)}</span>
+          ${j.exception_type ? `<span class="ts">${esc(j.exception_type)}</span>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  // ── Job detail ────────────────────────────────────────────────────
+  async function selectJob(id) {
+    selectedJobId = id;
+    expandedTasks = new Set();
+
+    document.querySelectorAll('.job-item').forEach(el => {
+      el.classList.toggle('selected', el.getAttribute('onclick') === `selectJob('${id}')`);
+    });
+
+    document.getElementById('jobDetail').innerHTML =
+      '<div class="detail-placeholder"><div>Loading…</div></div>';
+
+    try {
+      [cachedJob, cachedTasks] = await Promise.all([
+        fetch(`/jobs/${id}`).then(r => r.json()),
+        fetch(`/jobs/${id}/tasks`).then(r => r.json()),
+      ]);
+      renderDetail();
+    } catch {
+      document.getElementById('jobDetail').innerHTML =
+        '<div class="detail-placeholder"><div>로드 실패</div></div>';
+    }
+  }
+
+  function renderDetail() {
+    if (!cachedJob) return;
+    const job   = cachedJob;
+    const tasks = cachedTasks || [];
+
+    const totalIn  = job.input_tokens  || 0;
+    const totalOut = job.output_tokens || 0;
+
+    const rows = [
+      ['ID',          `<code>${job.id}</code>`],
+      ['Status',      badge(job.status)],
+      ['Source',      `${esc(job.source)} / ${esc(job.source_issue_id)}`],
+      ['Environment', esc(job.environment || '—')],
+      ['Exception',   esc(job.exception_type || '—')],
+      ['File',        job.filename ? `<code>${esc(job.filename)}:${job.lineno || '?'}</code>` : '—'],
+      ['Function',    job.function  ? `<code>${esc(job.function)}</code>` : '—'],
+      ['Endpoint',    esc(job.transaction || '—')],
+      ['Branch',      esc(job.work_branch || '—')],
+      ['Tokens',      (totalIn || totalOut)
+        ? `↑ ${totalIn.toLocaleString()} in / ↓ ${totalOut.toLocaleString()} out`
+        : '—'],
+      ['Created',     new Date(job.created_at).toLocaleString('ko-KR')],
+      ['Updated',     new Date(job.updated_at).toLocaleString('ko-KR')],
+      ['SourceLink',      job.source_url
+        ? `<a href="${esc(job.source_url)}" target="_blank">열기 ↗</a>` : '—'],
+    ];
+    if (job.error_log)
+      rows.push(['Error', `<span style="color:#f85149">${esc(job.error_log)}</span>`]);
+
+    const fieldsHtml = rows.map(([k, v]) =>
+      `<div class="fl">${k}</div><div class="fv">${v}</div>`
+    ).join('');
+
+    const tasksHtml = tasks.length
+      ? tasks.map(renderTask).join('')
+      : '<div class="empty">없음</div>';
+
+    const scrollTop = document.getElementById('jobDetail').scrollTop;
+
+    document.getElementById('jobDetail').innerHTML = `
+      <div>
+        <h2 style="font-size:15px;font-weight:600;margin-bottom:4px">${esc(job.title)}</h2>
+        <div style="font-size:13px;color:#8b949e">${esc(job.message || '')}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">상세 정보</div>
+        <div class="card-body">
+          <div class="field-grid">${fieldsHtml}</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Agent Tasks (${tasks.length})</div>
+
+        <div class="card-body" style="padding:10px">
+          <div class="task-list">${tasksHtml}</div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('jobDetail').scrollTop = scrollTop;
+  }
+
+  function renderTask(t) {
+    const open = expandedTasks.has(t.id);
+    let bodyHtml = '';
+
+    try {
+      const raw = t.content ?? '';
+      const c = (typeof raw === 'string' && (raw.startsWith('{') || raw.startsWith('[')))
+        ? JSON.parse(raw) : null;
+
+      if (c && typeof c === 'object') {
+        bodyHtml = `<pre>${esc(JSON.stringify(c, null, 2))}</pre>`;
+      } else {
+        bodyHtml = `<pre>${esc(String(raw))}</pre>`;
+      }
+    } catch {
+      bodyHtml = `<pre>${esc(String(t.content ?? ''))}</pre>`;
+    }
+
+    return `
+      <div class="task-item${open ? ' open' : ''}">
+        <div class="task-header" onclick="toggleTask('${t.id}')">
+          <span class="task-seq">#${t.sequence}</span>
+          <span class="badge badge-${t.type}">${t.type}</span>
+          <span class="task-preview">${esc(t.label ?? '')}</span>
+          <span class="task-arrow">${open ? '▲' : '▼'}</span>
+        </div>
+        ${open ? `<div class="task-body">${bodyHtml}</div>` : ''}
+      </div>`;
+  }
+
+  function toggleTask(taskId) {
+    if (expandedTasks.has(taskId)) expandedTasks.delete(taskId);
+    else expandedTasks.add(taskId);
+    renderDetail();   // API 재호출 없이 캐시 데이터로 재렌더
+  }
+
+  // ── Projects ──────────────────────────────────────────────────────
+  async function loadProjects() {
+    try {
+      const projects = await fetch('/projects').then(r => r.json());
+      const el = document.getElementById('projectsGrid');
+      if (!projects.length) { el.innerHTML = '<div class="empty">등록된 프로젝트 없음</div>'; return; }
+      el.innerHTML = projects.map(p => `
+        <div class="project-card">
+          <h3>${esc(p.source)} / ${esc(p.source_project_id)}</h3>
+          <div class="meta">
+            <div><a href="${esc(p.repo_url)}" target="_blank">${esc(p.repo_url)} ↗</a></div>
+            <div>Platform: ${esc(p.repo_platform)}</div>
+            <div>등록: ${new Date(p.created_at).toLocaleDateString('ko-KR')}</div>
+          </div>
+          <div class="project-card-footer">
+            <button class="ctrl-btn danger"
+              onclick="deleteProject(${JSON.stringify(p.source)}, ${JSON.stringify(p.source_project_id)})">삭제</button>
+          </div>
+        </div>`).join('');
+    } catch {
+      document.getElementById('projectsGrid').innerHTML = '<div class="empty">로드 실패</div>';
+    }
+  }
+
+  async function deleteProject(source, sourceProjectId) {
+    if (!confirm(`프로젝트를 삭제할까요?\n\n${source} / ${sourceProjectId}`)) return;
+    try {
+      const r = await fetch(`/projects/${encodeURIComponent(source)}/${encodeURIComponent(sourceProjectId)}`, {
+        method: 'DELETE',
+      });
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        alert(d.detail || '삭제 실패');
+        return;
+      }
+      await loadProjects();
+    } catch {
+      alert('삭제 중 오류 발생');
+    }
+  }
+
+  function openAddProjectModal() {
+    document.getElementById('fp-source').value = 'sentry';
+    document.getElementById('fp-source-project-id').value = '';
+    document.getElementById('fp-repo-url').value = '';
+    document.getElementById('fp-platform').value = 'github';
+    document.getElementById('addProjectError').style.display = 'none';
+    document.getElementById('btnAddProjectSubmit').disabled = false;
+    document.getElementById('addProjectModal').classList.add('open');
+  }
+
+  function closeAddProjectModal() {
+    document.getElementById('addProjectModal').classList.remove('open');
+  }
+
+  function handleModalBackdrop(e) {
+    if (e.target === e.currentTarget) closeAddProjectModal();
+  }
+
+  async function submitAddProject() {
+    const source          = document.getElementById('fp-source').value.trim();
+    const sourceProjectId = document.getElementById('fp-source-project-id').value.trim();
+    const repoUrl         = document.getElementById('fp-repo-url').value.trim();
+    const repoPlatform    = document.getElementById('fp-platform').value;
+    const errEl           = document.getElementById('addProjectError');
+
+    if (!sourceProjectId || !repoUrl) {
+      errEl.textContent = 'Source Project ID와 Repository URL은 필수입니다.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    document.getElementById('btnAddProjectSubmit').disabled = true;
+    errEl.style.display = 'none';
+
+    try {
+      const r = await fetch('/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source,
+          source_project_id: sourceProjectId,
+          repo_url: repoUrl,
+          repo_platform: repoPlatform,
+        }),
+      });
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        errEl.textContent = d.detail || '추가 실패';
+        errEl.style.display = 'block';
+        document.getElementById('btnAddProjectSubmit').disabled = false;
+        return;
+      }
+      closeAddProjectModal();
+      await loadProjects();
+    } catch {
+      errEl.textContent = '네트워크 오류';
+      errEl.style.display = 'block';
+      document.getElementById('btnAddProjectSubmit').disabled = false;
+    }
+  }
+
+  // ── Utils ─────────────────────────────────────────────────────────
+  function badge(s) {
+    return `<span class="badge badge-${s}">${s}</span>`;
+  }
+  function esc(s) {
+    return String(s ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function timeAgo(iso) {
+    const d = (Date.now() - new Date(iso)) / 1000;
+    if (d < 60)    return `${Math.floor(d)}s ago`;
+    if (d < 3600)  return `${Math.floor(d/60)}m ago`;
+    if (d < 86400) return `${Math.floor(d/3600)}h ago`;
+    return `${Math.floor(d/86400)}d ago`;
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────
+  loadJobs();
+  pollWorker();
+  setInterval(loadJobs,   5000);
+  setInterval(pollWorker, 3000);
+</script>
+</body>
+</html>
