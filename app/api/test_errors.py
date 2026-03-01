@@ -70,6 +70,7 @@ async def trigger_key_error():
     config = {
         "host": "localhost",
         "port": 5432,
+        "password": "default_password",
     }
     # 설정에 없는 키에 접근
     db_password = config["password"]  # KeyError: 'password'
