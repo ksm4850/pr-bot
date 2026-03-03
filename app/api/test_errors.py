@@ -1,6 +1,6 @@
 """테스트용 에러 엔드포인트 - Sentry 캡처 확인용"""
 
-from sqlalchemy import select, text
+from sqlalchemy import func, select, text
 
 from fastapi import APIRouter
 
@@ -37,29 +37,25 @@ async def trigger_n_plus_one():
     """
     session = db_session.get()
 
-    # Query 1: 전체 프로젝트 목록 조회
-    result = await session.execute(select(ProjectModel))
-    projects = result.scalars().all()
-
-    # Query N: 프로젝트마다 개별 job 조회 (N+1 문제)
-    project_jobs = []
-    for project in projects:
-        job_result = await session.execute(
-            select(JobModel).where(JobModel.source_project_id == project.source_project_id)
+    # 단일 쿼리: LEFT JOIN으로 프로젝트별 job 수를 한 번에 조회
+    stmt = (
+        select(
+            ProjectModel.id,
+            func.count(JobModel.id).label("job_count"),
         )
-        jobs = job_result.scalars().all()
-        project_jobs.append({
-            "project_id": project.id,
-            "job_count": len(jobs),
-        })
-
-    # 실제 실행된 쿼리 수
-    total_queries = 1 + len(projects)
-    if total_queries > 1:
-        raise RuntimeError(
-            f"N+1 쿼리 감지: projects 1번 조회 후 job을 {len(projects)}번 개별 조회. "
-            f"총 {total_queries}개 쿼리 실행. selectinload/joinedload 사용 필요."
+        .outerjoin(
+            JobModel,
+            ProjectModel.source_project_id == JobModel.source_project_id,
         )
+        .group_by(ProjectModel.id)
+    )
+    result = await session.execute(stmt)
+    rows = result.all()
+
+    project_jobs = [
+        {"project_id": row.id, "job_count": row.job_count}
+        for row in rows
+    ]
 
     return {"project_jobs": project_jobs}
 
