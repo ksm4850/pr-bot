@@ -84,11 +84,20 @@ class AgentService:
         job_svc: JobService,
     ) -> None:
         """Opus로 플랜 수립 → Sonnet으로 실행. 실패 시 예외 raise."""
+        mode = settings.agent_mode
+        logger.info("[agent] Mode: %s | job %s", mode, job.id)
+
         logger.info("[agent] Phase 1: Planning (Opus) for job %s", job.id)
-        plan = await self._plan(job, repo_dir, job_svc)
+        if mode == "claude-code":
+            plan = await self._plan_claude_code(job, repo_dir, job_svc)
+        else:
+            plan = await self._plan(job, repo_dir, job_svc)
 
         logger.info("[agent] Phase 2: Executing (Sonnet) for job %s", job.id)
-        summary = await self._execute(job, repo_dir, work_branch, plan, job_svc)
+        if mode == "claude-code":
+            summary = await self._execute_claude_code(job, repo_dir, work_branch, plan, job_svc)
+        else:
+            summary = await self._execute(job, repo_dir, work_branch, plan, job_svc)
 
         if summary:
             logger.info("[agent] Saving summary for job %s", job.id)
@@ -195,6 +204,82 @@ class AgentService:
             messages.append({"role": "user", "content": tool_results})
 
         raise RuntimeError(f"Agent exceeded max turns ({MAX_TURNS})")
+
+    # ── Phase 1 (claude-code 모드): Claude Code CLI subprocess ────
+
+    async def _plan_claude_code(self, job: Job, repo_dir: Path, job_svc: JobService) -> str:
+        """claude CLI subprocess로 Opus가 플랜 수립. 구독제 사용."""
+        file_content = self._read_source_file(job, repo_dir)
+        prompt = f"{PLANNER_SYSTEM_PROMPT}\n\n{build_plan_prompt(job, file_content)}"
+
+        result = await asyncio.to_thread(
+            subprocess.run,
+            [
+                "claude", "-p",
+                "--model", PLANNER_MODEL,
+            ],
+            input=prompt,
+            cwd=repo_dir,
+            capture_output=True,
+            encoding="utf-8",
+            timeout=300,
+        )
+
+        if result.returncode != 0:
+            raise RuntimeError(f"claude CLI (planner) failed (exit {result.returncode}): {result.stderr.strip()}")
+
+        plan = result.stdout.strip()
+        logger.info("[planner/claude-code] Plan created (%d chars)", len(plan))
+
+        async with db_context():
+            await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[PLAN]\n{plan}", label="Opus 수정 플랜 수립")
+
+        return plan
+
+    # ── Phase 2 (claude-code 모드): Claude Code CLI subprocess ────
+
+    async def _execute_claude_code(
+        self,
+        job: Job,
+        repo_dir: Path,
+        work_branch: str,
+        plan: str,
+        job_svc: JobService,
+    ) -> str:
+        """claude CLI subprocess로 Sonnet이 플랜 실행. 구독제 사용."""
+        prompt = build_execute_prompt(job, repo_dir, work_branch, plan)
+
+        result = await asyncio.to_thread(
+            subprocess.run,
+            [
+                "claude", "-p",
+                "--model", EXECUTOR_MODEL,
+                "--dangerously-skip-permissions",
+            ],
+            input=prompt,
+            cwd=repo_dir,
+            capture_output=True,
+            encoding="utf-8",
+            timeout=600,
+        )
+
+        output = result.stdout.strip()
+        stderr = result.stderr.strip()
+
+        if result.returncode != 0:
+            raise RuntimeError(f"claude CLI failed (exit {result.returncode}): {stderr}")
+
+        logger.info("[executor/claude-code] Done | output: %d chars", len(output))
+
+        async with db_context():
+            await job_svc.add_task(
+                job.id,
+                JobTaskType.MESSAGE,
+                content=output,
+                label="Claude Code 실행 완료",
+            )
+
+        return output
 
     async def _execute_tool(
         self,

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -28,6 +29,9 @@ class Settings(BaseSettings):
         if not v:
             return Path.home() / ".pr-bot-workspaces"
         return Path(v)
+
+    # Agent mode: "api" = Anthropic API 직접 호출, "claude-code" = claude CLI subprocess
+    agent_mode: Literal["api", "claude-code"] = "api"
 
     # API Keys (optional for now)
     anthropic_api_key: str | None = None

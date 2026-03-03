@@ -56,10 +56,7 @@ async def trigger_n_plus_one():
     # 실제 실행된 쿼리 수
     total_queries = 1 + len(projects)
     if total_queries > 1:
-        raise RuntimeError(
-            f"N+1 쿼리 감지: projects 1번 조회 후 job을 {len(projects)}번 개별 조회. "
-            f"총 {total_queries}개 쿼리 실행. selectinload/joinedload 사용 필요."
-        )
+        raise
 
     return {"project_jobs": project_jobs}
 
