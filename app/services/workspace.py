@@ -42,8 +42,12 @@ class WorkspaceService:
         else:
             settings.workspace_dir.mkdir(parents=True, exist_ok=True)
             await self._run(["git", "clone", auth_url, str(repo_dir)])
-        self._cache[repo_url] = repo_dir
 
+        # 봇 전용 커밋 author 설정
+        await self._run(["git", "-C", str(repo_dir), "config", "user.name", settings.bot_git_name])
+        await self._run(["git", "-C", str(repo_dir), "config", "user.email", settings.bot_git_email])
+
+        self._cache[repo_url] = repo_dir
         return repo_dir
 
     async def get_default_branch(self, repo_dir: Path) -> str:

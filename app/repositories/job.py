@@ -2,7 +2,9 @@ import json
 import uuid
 from datetime import UTC, datetime
 
-from sqlalchemy import select
+from datetime import UTC, datetime
+
+from sqlalchemy import case, select
 from sqlalchemy.exc import IntegrityError
 
 from app.models.error import ParsedError
@@ -25,6 +27,7 @@ class JobRepository(BaseRepository):
             source_project_id=parsed_error.source_project_id,
             source_issue_id=parsed_error.source_issue_id,
             title=parsed_error.title,
+            subtitle=parsed_error.subtitle,
             message=parsed_error.message,
             level=parsed_error.level,
             environment=parsed_error.environment,
@@ -73,6 +76,31 @@ class JobRepository(BaseRepository):
         )
         return result.scalar_one_or_none()
 
+    async def get_next_job(self) -> JobModel | None:
+        """RATE_LIMITED(대기 시간 지난 것) 우선, 그 다음 PENDING 순으로 조회"""
+        now = datetime.now(UTC)
+        # 우선순위: rate_limited(0) > pending(1)
+        priority = case(
+            (JobModel.status == JobStatus.RATE_LIMITED.value, 0),
+            else_=1,
+        )
+        result = await self.session.execute(
+            select(JobModel)
+            .where(
+                (
+                    (JobModel.status == JobStatus.RATE_LIMITED.value)
+                    & (
+                        (JobModel.rate_limited_until == None)  # noqa: E711
+                        | (JobModel.rate_limited_until <= now)
+                    )
+                )
+                | (JobModel.status == JobStatus.PENDING.value)
+            )
+            .order_by(priority, JobModel.created_at.asc())
+            .limit(1)
+        )
+        return result.scalar_one_or_none()
+
     async def update_status(
         self,
         job_id: str,
@@ -81,6 +109,7 @@ class JobRepository(BaseRepository):
         work_branch: str | None = None,
         error_log: str | None = None,
         increment_retry: bool = False,
+        rate_limited_until: datetime | None = None,
     ) -> bool:
         db_job = await self.get(job_id)
         if not db_job:
@@ -93,6 +122,11 @@ class JobRepository(BaseRepository):
             db_job.error_log = error_log
         if increment_retry:
             db_job.retry_count += 1
+        if status == JobStatus.RATE_LIMITED:
+            db_job.rate_limited_until = rate_limited_until
+        elif db_job.rate_limited_until is not None:
+            # rate limit 해제 시 초기화
+            db_job.rate_limited_until = None
         await self.session.flush()
         return True
 

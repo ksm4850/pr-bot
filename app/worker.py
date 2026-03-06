@@ -7,13 +7,14 @@
 import asyncio
 import logging
 import signal
+from datetime import UTC, datetime, timedelta
 
 import anthropic
 
 from app.core.config import settings
 from app.core.database import db_context, init_db
 from app.models.job import Job, JobStatus, JobTaskType
-from app.services.agent import AgentService
+from app.services.agent import AgentService, RateLimitedError
 from app.services.job_queue import JobService
 from app.services.project import ProjectService
 from app.services.workspace import WorkspaceService
@@ -27,6 +28,8 @@ logger = logging.getLogger("worker")
 MAX_RETRY = 3
 
 # 재시도 없이 즉시 FAILED 처리할 에러
+DEFAULT_RATE_LIMIT_WAIT = 60  # retry-after 없을 때 기본 대기(초)
+
 FATAL_ERRORS = (
     anthropic.AuthenticationError,   # API 키 오류
     anthropic.PermissionDeniedError, # 권한 없음
@@ -56,7 +59,7 @@ class Worker:
         while self._running:
             try:
                 async with db_context():
-                    job = await self.job_svc.get_pending_job()
+                    job = await self.job_svc.get_next_job()
 
                 if job:
                     await self._process(job)
@@ -69,12 +72,15 @@ class Worker:
 
     async def _process(self, job: Job) -> None:
         self.current_job_id = job.id
-        logger.info("Processing job %s: %s", job.id, job.title)
+        self.agent_svc.token_pool.reset()  # 새 Job마다 첫 번째 토큰부터
+        resume = job.status == JobStatus.RATE_LIMITED
+        logger.info("Processing job %s: %s (resume=%s)", job.id, job.title, resume)
 
         # ── 1. PROCESSING 상태로 전환 ────────────────────────────────
         async with db_context():
             await self.job_svc.update_job_status(job.id, JobStatus.PROCESSING)
-            await self.job_svc.add_task(job.id, JobTaskType.STATUS, content="processing", label="작업 처리 시작")
+            label = "작업 재개 (rate limit 해제)" if resume else "작업 처리 시작"
+            await self.job_svc.add_task(job.id, JobTaskType.STATUS, content="processing", label=label)
 
         try:
             # ── 2. 프로젝트 정보 조회 (repo_url) ──────────────────────
@@ -93,14 +99,18 @@ class Worker:
             repo_dir = await self.workspace_svc.prepare(project.repo_url, project.repo_platform.value)
 
             # ── 4. 작업 브랜치 생성 ───────────────────────────────────
-            base_branch = await self.workspace_svc.get_default_branch(repo_dir)
+            # environment가 있으면 해당 브랜치 기준, 없으면 기본 브랜치
+            if job.environment:
+                base_branch = job.environment
+            else:
+                base_branch = await self.workspace_svc.get_default_branch(repo_dir)
             work_branch = f"fix/{job.id[:8]}"
             await self.workspace_svc.create_work_branch(repo_dir, base_branch, work_branch)
 
             logger.info("Branch ready: %s (base: %s)", work_branch, base_branch)
 
             # ── 5. Claude 에이전트 실행 ───────────────────────────────
-            await self.agent_svc.run(job, repo_dir, work_branch, self.job_svc)
+            await self.agent_svc.run(job, repo_dir, work_branch, self.job_svc, resume=resume)
 
             # ── 6. 변경사항 push ──────────────────────────────────────
             await self.workspace_svc.push_branch(repo_dir, work_branch)
@@ -115,6 +125,25 @@ class Worker:
                 await self.job_svc.add_task(job.id, JobTaskType.STATUS, content="done", label="작업 완료 — PR 브랜치 생성됨")
 
             logger.info("Job %s done → branch: %s", job.id, work_branch)
+
+        except RateLimitedError as e:
+            wait_seconds = e.retry_after or DEFAULT_RATE_LIMIT_WAIT
+            until = datetime.now(UTC) + timedelta(seconds=wait_seconds)
+            logger.warning("Job %s rate limited → wait until %s (%ds)", job.id, until.isoformat(), wait_seconds)
+
+            async with db_context():
+                await self.job_svc.update_job_status(
+                    job.id,
+                    JobStatus.RATE_LIMITED,
+                    error_log=str(e),
+                    rate_limited_until=until,
+                )
+                await self.job_svc.add_task(
+                    job.id,
+                    JobTaskType.ERROR,
+                    content={"error": str(e), "retry_after": wait_seconds},
+                    label=f"Rate limited — {wait_seconds}초 후 재개",
+                )
 
         except Exception as e:
             error_msg = str(e)

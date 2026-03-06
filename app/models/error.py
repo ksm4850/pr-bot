@@ -25,8 +25,9 @@ class ParsedError(BaseModel):
     source_issue_id: str  # 소스별 고유 ID
 
     # 에러 정보
-    title: str
-    message: str | None = None  # exception message
+    title: str                          # issueTitle (N+1 Query) 또는 exception title
+    subtitle: str | None = None         # 부가 설명 (쿼리 내용 등)
+    message: str | None = None          # exception message
     level: str | None = None
     environment: str | None = None  # dev, prod 등 → 깃 브랜치 결정
 

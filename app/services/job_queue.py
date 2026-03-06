@@ -1,5 +1,7 @@
 """Job Queue 서비스 - JobRepository 위임"""
 
+from datetime import datetime
+
 from app.models.error import ParsedError
 from app.models.job import ErrorSource, Job, JobStatus, JobTask, JobTaskType
 from app.repositories.job import JobRepository
@@ -23,6 +25,11 @@ class JobService:
         db_job = await self.repo.get_pending()
         return Job.from_orm(db_job) if db_job else None
 
+    async def get_next_job(self) -> Job | None:
+        """RATE_LIMITED(대기 완료) 우선, PENDING 다음"""
+        db_job = await self.repo.get_next_job()
+        return Job.from_orm(db_job) if db_job else None
+
     async def update_job_status(
         self,
         job_id: str,
@@ -31,12 +38,14 @@ class JobService:
         work_branch: str | None = None,
         error_log: str | None = None,
         increment_retry: bool = False,
+        rate_limited_until: datetime | None = None,
     ) -> bool:
         return await self.repo.update_status(
             job_id, status,
             work_branch=work_branch,
             error_log=error_log,
             increment_retry=increment_retry,
+            rate_limited_until=rate_limited_until,
         )
 
     async def add_tokens(self, job_id: str, input_tokens: int, output_tokens: int) -> None:

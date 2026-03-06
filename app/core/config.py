@@ -33,10 +33,27 @@ class Settings(BaseSettings):
     # Agent mode: "api" = Anthropic API 직접 호출, "claude-code" = claude CLI subprocess
     agent_mode: Literal["api", "claude-code"] = "api"
 
+    # Bot git identity
+    bot_git_name: str = "pr-bot"
+    bot_git_email: str = "pr-bot@noreply"
+
     # API Keys (optional for now)
     anthropic_api_key: str | None = None
     github_token: str | None = None
     gitlab_token: str | None = None
+
+    # Claude Code 구독 계정 토큰 (쉼표 구분)
+    # setup-token으로 발급받은 long-lived token 목록
+    claude_tokens: list[str] = []
+
+    @field_validator("claude_tokens", mode="before")
+    @classmethod
+    def _parse_claude_tokens(cls, v: str | list | None) -> list[str]:
+        if not v:
+            return []
+        if isinstance(v, str):
+            return [t.strip() for t in v.split(",") if t.strip()]
+        return v
 
     # Sentry
     sentry_webhook_secret: str | None = None

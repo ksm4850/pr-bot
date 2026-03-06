@@ -27,6 +27,7 @@ Rules:
 - Do NOT judge whether the code is "test code" or "intentional" — production threw this error, so it must be fixed.
 - Be precise and specific. Another engineer will implement your plan exactly as written.
 - Do NOT implement the fix yourself — only plan it.
+- Always respond in Korean (한국어로 응답).
 """
 
 
@@ -36,6 +37,11 @@ def build_plan_prompt(job: Job, file_content: str | None) -> str:
         "## Error Report",
         "",
         f"**Title**: {job.title}",
+    ]
+    if job.subtitle:
+        parts.append(f"**Subtitle**: {job.subtitle}")
+
+    parts += [
         f"**Exception**: {job.exception_type or 'Unknown'}",
         f"**Message**: {job.message or '(no message)'}",
         f"**Environment**: {job.environment or 'unknown'}",
@@ -81,6 +87,13 @@ def build_plan_prompt(job: Job, file_content: str | None) -> str:
             file_content,
             "```",
         ]
+    elif job.filename:
+        # file_content가 없으면 (경로 불일치 등) 파일 탐색 지시
+        parts += [
+            "",
+            f"**Note**: 파일 `{job.filename}`을 직접 찾지 못했습니다.",
+            f"레포지토리에서 `find . -path '*{job.filename}'` 등으로 실제 경로를 찾아 분석하세요.",
+        ]
 
     parts += [
         "",
@@ -112,6 +125,7 @@ Rules:
 - Always end with a git commit. The branch is already checked out.
 - Do NOT push to remote. The system handles that.
 - Commit message format: "fix: <short description>"
+- Always respond in Korean (한국어로 응답). Commit messages are in English.
 """
 
 
@@ -121,6 +135,7 @@ def build_execute_prompt(job: Job, repo_dir: Path, work_branch: str, plan: str) 
         "## Error Summary",
         "",
         f"**Title**: {job.title}",
+        f"**Subtitle**: {job.subtitle or ''}",
         f"**File**: `{job.filename or 'unknown'}` line {job.lineno or '?'}",
         f"**Exception**: {job.exception_type}: {job.message or ''}",
         "",

@@ -42,6 +42,16 @@ class SentryException(BaseModel):
     model_config = {"extra": "ignore"}
 
 
+class SentryOccurrence(BaseModel):
+    """performance issue 등 occurrence 기반 이벤트"""
+    issueTitle: str | None = None       # "N+1 Query"
+    subtitle: str | None = None         # 실제 쿼리/설명
+    culprit: str | None = None
+    evidenceDisplay: list[dict] | None = None
+
+    model_config = {"extra": "ignore"}
+
+
 class SentryEvent(BaseModel):
     event_id: str | None = None
     project: int | str | None = None  # Sentry project ID (projects 테이블 조회용)
@@ -55,6 +65,7 @@ class SentryEvent(BaseModel):
     transaction: str | None = None
     web_url: str | None = None
     exception: SentryException | None = None
+    occurrence: SentryOccurrence | None = None
 
     model_config = {"extra": "ignore"}
 
@@ -118,17 +129,29 @@ class SentryParser(ErrorParser):
         # 마지막 in_app 프레임이 에러 발생 위치
         last_frame = in_app_frames[-1] if in_app_frames else None
 
-        # title 구성: "ExceptionType: message"
-        title = event.title
+        # occurrence 기반 이슈 (N+1 Query, Slow DB Query 등)
+        occ = event.occurrence
+        issue_title: str | None = None
+        subtitle: str | None = None
+        if occ:
+            issue_title = occ.issueTitle
+            subtitle = occ.subtitle
+
+        # title: occurrence.issueTitle > event.title > exception 조합
+        title = issue_title or event.title
         if not title and exception_type:
             title = f"{exception_type}: {exception_message}" if exception_message else exception_type
+
+        # message: exception_message가 없으면 subtitle 사용
+        message = exception_message or subtitle
 
         parsed = ParsedError(
             source=self.source,
             source_project_id=str(event.project) if event.project else None,
             source_issue_id=event.issue_id or event.event_id or "unknown",
             title=title or "Unknown Error",
-            message=exception_message,
+            subtitle=subtitle,
+            message=message,
             level=event.level,
             environment=event.environment,
             filename=last_frame.filename if last_frame else None,
@@ -136,7 +159,6 @@ class SentryParser(ErrorParser):
             function=last_frame.function if last_frame else None,
             frames=in_app_frames,
             source_url=event.web_url,
-            # 추가 필드 (raw_payload에서 접근 가능하도록)
             exception_type=exception_type,
             transaction=event.transaction,
         )

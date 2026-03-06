@@ -9,6 +9,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 class JobStatus(str, Enum):
     PENDING = "pending"
     PROCESSING = "processing"
+    RATE_LIMITED = "rate_limited"
     DONE = "done"
     FAILED = "failed"
 
@@ -45,6 +46,7 @@ class JobModel(Base):
 
     # 에러 정보
     title: Mapped[str] = mapped_column(Text)
+    subtitle: Mapped[str | None] = mapped_column(Text, nullable=True)
     message: Mapped[str | None] = mapped_column(Text, nullable=True)
     level: Mapped[str | None] = mapped_column(String(20), nullable=True)
     environment: Mapped[str | None] = mapped_column(String(50), nullable=True)
@@ -64,6 +66,9 @@ class JobModel(Base):
     # 토큰 사용량 (Opus + Sonnet 누적)
     input_tokens: Mapped[int] = mapped_column(Integer, default=0)
     output_tokens: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Rate limit
+    rate_limited_until: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     # 메타
     retry_count: Mapped[int] = mapped_column(Integer, default=0)
@@ -109,6 +114,7 @@ class Job(BaseModel):
     source_project_id: str | None = None
     source_issue_id: str
     title: str
+    subtitle: str | None = None
     message: str | None = None
     level: str | None = None
     environment: str | None = None
@@ -120,6 +126,7 @@ class Job(BaseModel):
     stacktrace: str | None = None
     work_branch: str | None = None
     error_log: str | None = None
+    rate_limited_until: datetime | None = None
     input_tokens: int = 0
     output_tokens: int = 0
     retry_count: int = 0
@@ -137,6 +144,7 @@ class Job(BaseModel):
             source_project_id=db.source_project_id,
             source_issue_id=db.source_issue_id,
             title=db.title,
+            subtitle=db.subtitle,
             message=db.message,
             level=db.level,
             environment=db.environment,
@@ -148,6 +156,7 @@ class Job(BaseModel):
             stacktrace=db.stacktrace,
             work_branch=db.work_branch,
             error_log=db.error_log,
+            rate_limited_until=db.rate_limited_until,
             input_tokens=db.input_tokens,
             output_tokens=db.output_tokens,
             retry_count=db.retry_count,
