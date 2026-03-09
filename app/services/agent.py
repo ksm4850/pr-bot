@@ -66,8 +66,7 @@ class TokenPool:
         env = {**os.environ}
         token = self.current
         if token:
-            env["CLAUDE_CODE_USE_LONG_LIVED_TOKEN"] = "true"
-            env["CLAUDE_CODE_LONG_LIVED_TOKEN"] = token
+            env["CLAUDE_CODE_OAUTH_TOKEN"] = token
         return env
 
 PLANNER_MODEL = "claude-opus-4-6"
@@ -122,10 +121,21 @@ TOOLS: list[anthropic.types.ToolParam] = [
 
 class AgentService:
     def __init__(self):
-        self._client = anthropic.AsyncAnthropic(
-            api_key=settings.anthropic_api_key,
-        )
-        self.token_pool = TokenPool(settings.claude_tokens)
+        mode = settings.agent_mode
+
+        if mode == "api":
+            if not settings.anthropic_api_key:
+                raise ValueError("AGENT_MODE=api 이지만 ANTHROPIC_API_KEY가 설정되지 않았습니다")
+            self._client = anthropic.AsyncAnthropic(
+                api_key=settings.anthropic_api_key,
+            )
+            self.token_pool = TokenPool([])
+        else:
+            tokens = settings.get_claude_tokens()
+            if not tokens:
+                raise ValueError("AGENT_MODE=claude-code 이지만 CLAUDE_TOKENS가 설정되지 않았습니다")
+            self._client = None  # claude-code 모드에서는 미사용
+            self.token_pool = TokenPool(tokens)
 
     async def run(
         self,
@@ -410,14 +420,16 @@ class AgentService:
                 return result.stdout.strip()
 
             stderr = result.stderr.strip()
+            stdout = result.stdout.strip()
+            output = stderr or stdout  # stderr 비면 stdout 확인
 
             # rate limit 감지 → 토큰 로테이션 시도
-            if self._is_rate_limit_error(stderr):
+            if self._is_rate_limit_error(output):
                 token_idx = self.token_pool._index + 1
                 total = len(self.token_pool._tokens) if self.token_pool._tokens else 0
                 logger.warning(
                     "[claude-cli] Rate limited (token %d/%d): %s",
-                    token_idx, total, stderr[:200],
+                    token_idx, total, output[:200],
                 )
                 if self.token_pool.rotate():
                     logger.info("[claude-cli] Retrying with next token...")
@@ -425,7 +437,7 @@ class AgentService:
                 # 모든 토큰 소진
                 raise RateLimitedError()
 
-            raise RuntimeError(f"claude CLI failed (exit {result.returncode}): {stderr}")
+            raise RuntimeError(f"claude CLI failed (exit {result.returncode}): {output}")
 
     @staticmethod
     def _is_rate_limit_error(stderr: str) -> bool:

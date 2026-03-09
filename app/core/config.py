@@ -43,17 +43,13 @@ class Settings(BaseSettings):
     gitlab_token: str | None = None
 
     # Claude Code 구독 계정 토큰 (쉼표 구분)
-    # setup-token으로 발급받은 long-lived token 목록
-    claude_tokens: list[str] = []
+    # .env에서 CLAUDE_TOKENS=token1,token2 형태로 설정
+    claude_tokens: str = ""
 
-    @field_validator("claude_tokens", mode="before")
-    @classmethod
-    def _parse_claude_tokens(cls, v: str | list | None) -> list[str]:
-        if not v:
+    def get_claude_tokens(self) -> list[str]:
+        if not self.claude_tokens:
             return []
-        if isinstance(v, str):
-            return [t.strip() for t in v.split(",") if t.strip()]
-        return v
+        return [t.strip() for t in self.claude_tokens.split(",") if t.strip()]
 
     # Sentry
     sentry_webhook_secret: str | None = None
