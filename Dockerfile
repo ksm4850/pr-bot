@@ -23,6 +23,10 @@ COPY app/ app/
 RUN mkdir -p /app/data
 VOLUME /app/data
 
+# 비root 유저 (claude CLI가 root에서 --dangerously-skip-permissions 거부)
+RUN useradd -m -s /bin/bash -u 1000 botuser && chown -R botuser:botuser /app
+USER botuser
+
 EXPOSE 8000
 
 CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
