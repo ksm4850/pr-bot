@@ -76,17 +76,13 @@ class Worker:
         resume = job.status == JobStatus.RATE_LIMITED
         logger.info("Processing job %s: %s (resume=%s)", job.id, job.title, resume)
 
-        # ── 1. PROCESSING 상태로 전환 ────────────────────────────────
+        # ── 1. 작업 시작 기록 (PROCESSING 전환은 get_next_job에서 atomic하게 처리됨)
         async with db_context():
-            await self.job_svc.update_job_status(job.id, JobStatus.PROCESSING)
             label = "작업 재개 (rate limit 해제)" if resume else "작업 처리 시작"
             await self.job_svc.add_task(job.id, JobTaskType.STATUS, content="processing", label=label)
 
         try:
-            # ── 2. 프로젝트 정보 조회 (repo_url) ──────────────────────
-            if not job.source_project_id:
-                raise ValueError("job.source_project_id is missing — cannot lookup repo")
-
+            # ── 2. 프로젝트 정보 조회 (get_next_job에서 projects 조인으로 보장됨)
             async with db_context():
                 project = await self.project_svc.get(job.source.value, job.source_project_id)
 

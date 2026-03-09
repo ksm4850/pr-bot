@@ -4,11 +4,12 @@ from datetime import UTC, datetime
 
 from datetime import UTC, datetime
 
-from sqlalchemy import case, select
+from sqlalchemy import case, select, update
 from sqlalchemy.exc import IntegrityError
 
 from app.models.error import ParsedError
 from app.models.job import JobModel, JobStatus, JobTaskModel, JobTaskType
+from app.models.project import ProjectModel
 from app.repositories.base import BaseRepository
 
 
@@ -61,6 +62,15 @@ class JobRepository(BaseRepository):
         )
         return result.scalar_one_or_none() is not None
 
+    async def get_by_source(self, source: str, source_issue_id: str) -> JobModel | None:
+        result = await self.session.execute(
+            select(JobModel).where(
+                JobModel.source == source,
+                JobModel.source_issue_id == source_issue_id,
+            )
+        )
+        return result.scalar_one_or_none()
+
     async def get(self, job_id: str) -> JobModel | None:
         result = await self.session.execute(
             select(JobModel).where(JobModel.id == job_id)
@@ -77,15 +87,25 @@ class JobRepository(BaseRepository):
         return result.scalar_one_or_none()
 
     async def get_next_job(self) -> JobModel | None:
-        """RATE_LIMITED(대기 시간 지난 것) 우선, 그 다음 PENDING 순으로 조회"""
+        """Atomic UPDATE RETURNING으로 다음 job을 가져오며 즉시 PROCESSING으로 전환.
+
+        여러 워커가 동시에 호출해도 같은 job을 가져가지 않음.
+        등록된 프로젝트가 있는 job만 대상 (projects 조인).
+        우선순위: RATE_LIMITED(대기 완료) > PENDING, FIFO.
+        """
         now = datetime.now(UTC)
-        # 우선순위: rate_limited(0) > pending(1)
         priority = case(
             (JobModel.status == JobStatus.RATE_LIMITED.value, 0),
             else_=1,
         )
-        result = await self.session.execute(
-            select(JobModel)
+        # 서브쿼리: projects 조인하여 등록된 프로젝트가 있는 job만 선택
+        subq = (
+            select(JobModel.id)
+            .join(
+                ProjectModel,
+                (JobModel.source == ProjectModel.source)
+                & (JobModel.source_project_id == ProjectModel.source_project_id),
+            )
             .where(
                 (
                     (JobModel.status == JobStatus.RATE_LIMITED.value)
@@ -98,7 +118,16 @@ class JobRepository(BaseRepository):
             )
             .order_by(priority, JobModel.created_at.asc())
             .limit(1)
+            .scalar_subquery()
         )
+        # atomic UPDATE ... RETURNING
+        stmt = (
+            update(JobModel)
+            .where(JobModel.id == subq)
+            .values(status=JobStatus.PROCESSING.value, updated_at=now)
+            .returning(JobModel)
+        )
+        result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
     async def update_status(

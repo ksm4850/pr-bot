@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import ValidationError
 
-from app.models.job import ErrorSource
+from app.models.job import ErrorSource, JobStatus
 from app.services.job_queue import JobService
 from app.services.parsers import get_parser
 
@@ -68,13 +68,29 @@ async def sentry_webhook(request: Request) -> dict:
     # 파싱 결과 출력
     print_parsed_error(parsed)
 
-    # 중복 체크
-    if await job_service.job_exists(parsed.source, parsed.source_issue_id):
-        print(f"⚠️  Duplicate issue: {parsed.source_issue_id}")
+    # 중복 체크 — 동일 이슈가 재발생하면 PENDING으로 재등록
+    existing = await job_service.get_by_source(parsed.source, parsed.source_issue_id)
+    if existing:
+        if existing.status in (JobStatus.PENDING, JobStatus.PROCESSING, JobStatus.RATE_LIMITED):
+            print(f"⚠️  Duplicate issue (already {existing.status}): {parsed.source_issue_id}")
+            return {
+                "status": "duplicate",
+                "source": parsed.source.value,
+                "issue_id": parsed.source_issue_id,
+                "job_id": existing.id,
+            }
+        # DONE/FAILED → 에러 재발생이므로 PENDING으로 재처리
+        print(f"🔄 Reopen issue ({existing.status} → pending): {parsed.source_issue_id}")
+        await job_service.update_job_status(
+            existing.id,
+            JobStatus.PENDING,
+            error_log=None,
+        )
         return {
-            "status": "duplicate",
+            "status": "reopened",
             "source": parsed.source.value,
             "issue_id": parsed.source_issue_id,
+            "job_id": existing.id,
         }
 
     # Job 생성

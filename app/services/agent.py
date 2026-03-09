@@ -483,7 +483,7 @@ class AgentService:
         if texts:
             full_text = "\n".join(texts)
             first_line = full_text.split("\n")[0].strip()[:80]
-            from app.core.database import db_context
+
             async with db_context():
                 await job_svc.add_task(
                     job_id,

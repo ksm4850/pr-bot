@@ -17,6 +17,10 @@ class JobService:
     async def job_exists(self, source: ErrorSource, source_issue_id: str) -> bool:
         return await self.repo.exists(source.value, source_issue_id)
 
+    async def get_by_source(self, source: ErrorSource, source_issue_id: str) -> Job | None:
+        db_job = await self.repo.get_by_source(source.value, source_issue_id)
+        return Job.from_orm(db_job) if db_job else None
+
     async def get_job(self, job_id: str) -> Job | None:
         db_job = await self.repo.get(job_id)
         return Job.from_orm(db_job) if db_job else None
