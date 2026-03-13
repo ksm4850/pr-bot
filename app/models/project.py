@@ -34,6 +34,7 @@ class ProjectModel(Base):
     # Git 레포 정보
     repo_url: Mapped[str] = mapped_column(Text)            # "https://github.com/org/repo"
     repo_platform: Mapped[str] = mapped_column(String(20)) # "github" | "gitlab"
+    repo_token: Mapped[str | None] = mapped_column(Text, nullable=True)  # clone/push용 토큰
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=lambda: datetime.now(UTC)
@@ -58,6 +59,7 @@ class Project(BaseModel):
     source_project_id: str
     repo_url: str
     repo_platform: RepoPlatform
+    repo_token: str | None = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
@@ -69,6 +71,7 @@ class Project(BaseModel):
             source_project_id=db_model.source_project_id,
             repo_url=db_model.repo_url,
             repo_platform=RepoPlatform(db_model.repo_platform),
+            repo_token=db_model.repo_token,
             created_at=db_model.created_at,
             updated_at=db_model.updated_at,
         )

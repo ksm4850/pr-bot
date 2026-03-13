@@ -14,7 +14,7 @@ class WorkspaceService:
 
     - repo_url → 로컬 디렉토리 매핑 캐시 유지
     - 첫 사용 시 clone, 이후 pull
-    - github_token/gitlab_token 자동 주입
+    - 프로젝트별 토큰으로 인증
     """
 
     def __init__(self):
@@ -24,20 +24,27 @@ class WorkspaceService:
         safe_name = re.sub(r"[^\w.-]", "_", repo_url.split("://")[-1])
         return settings.workspace_dir / safe_name
 
-    def _authenticated_url(self, repo_url: str, platform: str) -> str:
+    def _authenticated_url(self, repo_url: str, platform: str, token: str | None) -> str:
         """토큰을 URL에 삽입 (https://token@host/...)"""
-        if platform == RepoPlatform.GITHUB.value and settings.github_token:
-            return repo_url.replace("https://", f"https://x-access-token:{settings.github_token}@")
-        if platform == RepoPlatform.GITLAB.value and settings.gitlab_token:
-            return repo_url.replace("https://", f"https://oauth2:{settings.gitlab_token}@")
+        if not token:
+            return repo_url
+        if platform == RepoPlatform.GITHUB.value:
+            return repo_url.replace("https://", f"https://x-access-token:{token}@")
+        if platform == RepoPlatform.GITLAB.value:
+            return repo_url.replace("https://", f"https://oauth2:{token}@")
         return repo_url
 
-    async def prepare(self, repo_url: str, platform: str) -> Path:
+    async def prepare(self, repo_url: str, platform: str, token: str | None = None) -> Path:
         """레포 clone 또는 pull 후 워크스페이스 경로 반환"""
         repo_dir = self._repo_dir(repo_url)
-        auth_url = self._authenticated_url(repo_url, platform)
+        auth_url = self._authenticated_url(repo_url, platform, token)
 
         if repo_dir.exists():
+            # 토큰 변경에 대응: remote URL 갱신
+            await self._run([
+                "git", "-C", str(repo_dir),
+                "remote", "set-url", "origin", auth_url,
+            ])
             await self._run(["git", "-C", str(repo_dir), "fetch", "--all", "--prune"])
         else:
             settings.workspace_dir.mkdir(parents=True, exist_ok=True)

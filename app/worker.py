@@ -92,7 +92,9 @@ class Worker:
                 )
 
             # ── 3. 워크스페이스 준비 (clone/fetch) ────────────────────
-            repo_dir = await self.workspace_svc.prepare(project.repo_url, project.repo_platform.value)
+            repo_dir = await self.workspace_svc.prepare(
+                project.repo_url, project.repo_platform.value, token=project.repo_token,
+            )
 
             # ── 4. 작업 브랜치 생성 ───────────────────────────────────
             # environment가 있으면 해당 브랜치 기준, 없으면 기본 브랜치

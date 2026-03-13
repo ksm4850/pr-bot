@@ -39,8 +39,6 @@ class Settings(BaseSettings):
 
     # API Keys (optional for now)
     anthropic_api_key: str | None = None
-    github_token: str | None = None
-    gitlab_token: str | None = None
 
     # Claude Code 구독 계정 토큰 (쉼표 구분)
     # .env에서 CLAUDE_TOKENS=token1,token2 형태로 설정

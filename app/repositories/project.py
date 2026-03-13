@@ -15,6 +15,7 @@ class ProjectRepository(BaseRepository):
         source_project_id: str,
         repo_url: str,
         repo_platform: str,
+        repo_token: str | None = None,
     ) -> ProjectModel:
         now = datetime.now(UTC)
         db_project = ProjectModel(
@@ -23,6 +24,7 @@ class ProjectRepository(BaseRepository):
             source_project_id=source_project_id,
             repo_url=repo_url,
             repo_platform=repo_platform,
+            repo_token=repo_token,
             created_at=now,
             updated_at=now,
         )

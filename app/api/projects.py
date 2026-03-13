@@ -13,6 +13,7 @@ class CreateProjectRequest(BaseModel):
     source_project_id: str   # "4509981525278720"
     repo_url: str            # "https://github.com/org/repo"
     repo_platform: RepoPlatform
+    repo_token: str | None = None  # clone/push용 토큰 (GitHub PAT, GitLab token 등)
 
 
 @router.post("", response_model=Project, status_code=201)
@@ -24,6 +25,7 @@ async def create_project(body: CreateProjectRequest) -> Project:
             source_project_id=body.source_project_id,
             repo_url=body.repo_url,
             repo_platform=body.repo_platform,
+            repo_token=body.repo_token,
         )
     except ValueError as e:
         raise HTTPException(status_code=409, detail=str(e))

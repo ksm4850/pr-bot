@@ -12,12 +12,14 @@ class ProjectService:
         source_project_id: str,
         repo_url: str,
         repo_platform: RepoPlatform,
+        repo_token: str | None = None,
     ) -> Project:
         db_project = await self.repo.create(
             source=source,
             source_project_id=source_project_id,
             repo_url=repo_url,
             repo_platform=repo_platform.value,
+            repo_token=repo_token,
         )
         return Project.from_orm(db_project)
 
