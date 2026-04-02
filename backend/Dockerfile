@@ -16,8 +16,8 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-editable
 
-# 소스 복사
-COPY app/ app/
+# 소스 복사 (backend/ 전체를 app/ 패키지로)
+COPY . app/
 
 # data 디렉토리 (마운트 포인트)
 RUN mkdir -p /app/data

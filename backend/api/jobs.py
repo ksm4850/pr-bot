@@ -10,12 +10,13 @@ service = JobService()
 @router.get("", response_model=list[Job])
 async def list_jobs(
     status: JobStatus | None = Query(None, description="상태 필터 (pending/processing/done/failed)"),
+    source_project_id: str | None = Query(None, description="소스 프로젝트 ID 필터"),
     page: int = Query(1, ge=1, description="페이지 번호 (1부터)"),
     limit: int = Query(20, ge=1, le=100, description="페이지당 항목 수"),
 ) -> list[Job]:
-    """Job 목록 조회 (페이징 + 상태 필터)"""
+    """Job 목록 조회 (페이징 + 상태/프로젝트 필터)"""
     offset = (page - 1) * limit
-    return await service.list_jobs(status=status, offset=offset, limit=limit)
+    return await service.list_jobs(status=status, source_project_id=source_project_id, offset=offset, limit=limit)
 
 
 @router.get("/{job_id}", response_model=Job)

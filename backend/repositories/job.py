@@ -159,10 +159,18 @@ class JobRepository(BaseRepository):
         await self.session.flush()
         return True
 
-    async def list_jobs(self, status: JobStatus | None = None, offset: int = 0, limit: int = 100) -> list[JobModel]:
+    async def list_jobs(
+        self,
+        status: JobStatus | None = None,
+        source_project_id: str | None = None,
+        offset: int = 0,
+        limit: int = 100,
+    ) -> list[JobModel]:
         query = select(JobModel).order_by(JobModel.created_at.desc()).offset(offset).limit(limit)
         if status:
             query = query.where(JobModel.status == status.value)
+        if source_project_id:
+            query = query.where(JobModel.source_project_id == source_project_id)
         result = await self.session.execute(query)
         return list(result.scalars().all())
 

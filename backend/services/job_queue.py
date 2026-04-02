@@ -70,7 +70,13 @@ class JobService:
         return [JobTask.from_orm(t) for t in db_tasks]
 
     async def list_jobs(
-        self, status: JobStatus | None = None, offset: int = 0, limit: int = 100
+        self,
+        status: JobStatus | None = None,
+        source_project_id: str | None = None,
+        offset: int = 0,
+        limit: int = 100,
     ) -> list[Job]:
-        db_jobs = await self.repo.list_jobs(status=status, offset=offset, limit=limit)
+        db_jobs = await self.repo.list_jobs(
+            status=status, source_project_id=source_project_id, offset=offset, limit=limit,
+        )
         return [Job.from_orm(j) for j in db_jobs]

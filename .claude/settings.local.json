@@ -5,7 +5,14 @@
       "Bash(CLAUDE_CODE_USE_LONG_LIVED_TOKEN=true CLAUDE_CODE_LONG_LIVED_TOKEN=test claude:*)",
       "Bash(CLAUDECODE= strings:*)",
       "Bash(CLAUDECODE= grep:*)",
-      "Bash(CLAUDECODE= CLAUDE_CODE_OAUTH_TOKEN=test claude auth:*)"
+      "Bash(CLAUDECODE= CLAUDE_CODE_OAUTH_TOKEN=test claude auth:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm i:*)",
+      "Bash(npx vite:*)",
+      "Bash(npm create:*)",
+      "Bash(npx:*)",
+      "Bash(npm run:*)"
     ]
   }
 }
