@@ -59,3 +59,20 @@ export const startWorker = () =>
 
 export const stopWorker = () =>
   fetchJSON<{ ok: boolean }>('/worker/stop', { method: 'POST' })
+
+// Settings
+export interface SettingsData {
+  dooray_webhook_url: string | null
+  notification_enabled: boolean
+}
+
+export const getSettings = () => fetchJSON<SettingsData>('/settings')
+
+export const updateSettings = (data: Partial<SettingsData>) =>
+  fetchJSON<SettingsData>('/settings', { method: 'PUT', body: JSON.stringify(data) })
+
+export const testNotification = (webhookUrl: string) =>
+  fetchJSON<{ ok: boolean }>('/settings/test-notification', {
+    method: 'POST',
+    body: JSON.stringify({ webhook_url: webhookUrl }),
+  })

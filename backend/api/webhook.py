@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import ValidationError
 
-from app.models.job import ErrorSource, JobStatus
-from app.services.job_queue import JobService
-from app.services.parsers import get_parser
+from models.job import ErrorSource, JobStatus
+from services.job_queue import JobService
+from services.parsers import get_parser
 
 router = APIRouter()
 job_service = JobService()

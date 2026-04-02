@@ -48,7 +48,7 @@ class WorkerManager:
         if self.is_running:
             raise RuntimeError("Worker is already running")
 
-        from app.worker import Worker  # 지연 import
+        from worker import Worker  # 지연 import
 
         self._worker = Worker()
         self.error = None

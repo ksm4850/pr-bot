@@ -11,13 +11,13 @@ from datetime import UTC, datetime, timedelta
 
 import anthropic
 
-from app.core.config import settings
-from app.core.database import db_context, init_db
-from app.models.job import Job, JobStatus, JobTaskType
-from app.services.agent import AgentService, RateLimitedError
-from app.services.job_queue import JobService
-from app.services.project import ProjectService
-from app.services.workspace import WorkspaceService
+from core.config import settings
+from core.database import db_context, init_db
+from models.job import Job, JobStatus, JobTaskType
+from services.agent import AgentService, RateLimitedError
+from services.job_queue import JobService
+from services.project import ProjectService
+from services.workspace import WorkspaceService
 
 logging.basicConfig(
     level=logging.INFO,

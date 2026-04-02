@@ -4,8 +4,8 @@ from datetime import UTC, datetime
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from app.models.project import ProjectModel
-from app.repositories.base import BaseRepository
+from models.project import ProjectModel
+from repositories.base import BaseRepository
 
 
 class ProjectRepository(BaseRepository):

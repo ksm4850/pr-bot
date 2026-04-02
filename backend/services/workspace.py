@@ -5,8 +5,8 @@ import re
 import subprocess
 from pathlib import Path
 
-from app.core.config import settings
-from app.models.project import RepoPlatform
+from core.config import settings
+from models.project import RepoPlatform
 
 
 class WorkspaceService:

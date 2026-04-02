@@ -1,5 +1,5 @@
-from app.services.notifications.base import NotificationMessage, NotificationSender
-from app.services.notifications.dooray import DoorayNotificationSender
+from services.notifications.base import NotificationMessage, NotificationSender
+from services.notifications.dooray import DoorayNotificationSender
 
 __all__ = [
     "NotificationMessage",

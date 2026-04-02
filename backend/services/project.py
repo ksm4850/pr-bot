@@ -1,5 +1,5 @@
-from app.models.project import Project, ProjectModel, RepoPlatform
-from app.repositories.project import ProjectRepository
+from models.project import Project, ProjectModel, RepoPlatform
+from repositories.project import ProjectRepository
 
 
 class ProjectService:

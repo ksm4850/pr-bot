@@ -7,10 +7,10 @@ from datetime import UTC, datetime
 from sqlalchemy import case, select, update
 from sqlalchemy.exc import IntegrityError
 
-from app.models.error import ParsedError
-from app.models.job import JobModel, JobStatus, JobTaskModel, JobTaskType
-from app.models.project import ProjectModel
-from app.repositories.base import BaseRepository
+from models.error import ParsedError
+from models.job import JobModel, JobStatus, JobTaskModel, JobTaskType
+from models.project import ProjectModel
+from repositories.base import BaseRepository
 
 
 class JobRepository(BaseRepository):

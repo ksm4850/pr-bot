@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from app.models.job import Job
+from models.job import Job
 
 
 # ── Planner (Opus) ────────────────────────────────────────────────

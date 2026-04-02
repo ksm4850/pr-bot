@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import DateTime, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.models.job import Base
+from models.job import Base
 
 
 class RepoPlatform(str, Enum):

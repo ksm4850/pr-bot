@@ -3,7 +3,7 @@ from contextvars import ContextVar
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from app.core.config import settings
+from core.config import settings
 
 # 현재 요청의 DB 세션 (미들웨어가 설정, Repository가 사용)
 db_session: ContextVar[AsyncSession] = ContextVar("db_session")
@@ -28,8 +28,9 @@ AsyncSessionLocal = async_sessionmaker(
 
 async def init_db():
     """DB 초기화 (테이블 생성)"""
-    from app.models.job import Base
-    import app.models.project  # noqa: F401 - Base에 ProjectModel 등록
+    from models.job import Base
+    import models.project  # noqa: F401 - Base에 ProjectModel 등록
+    import models.setting  # noqa: F401 - Base에 SettingModel 등록
 
     # 디렉토리 생성
     settings.database_path.parent.mkdir(parents=True, exist_ok=True)

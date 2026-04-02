@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.models.project import Project, RepoPlatform
-from app.services.project import ProjectService
+from models.project import Project, RepoPlatform
+from services.project import ProjectService
 
 router = APIRouter()
 service = ProjectService()

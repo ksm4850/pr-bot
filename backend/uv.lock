@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 
 [[package]]
@@ -345,6 +345,7 @@ dependencies = [
     { name = "aiosqlite" },
     { name = "anthropic" },
     { name = "fastapi" },
+    { name = "httpx" },
     { name = "pydantic-settings" },
     { name = "sentry-sdk", extra = ["fastapi"] },
     { name = "sqlalchemy", extra = ["asyncio"] },
@@ -363,6 +364,7 @@ requires-dist = [
     { name = "aiosqlite", specifier = ">=0.20.0" },
     { name = "anthropic", specifier = ">=0.40.0" },
     { name = "fastapi", specifier = ">=0.128.0" },
+    { name = "httpx", specifier = ">=0.27.0" },
     { name = "pydantic-settings", specifier = ">=2.0.0" },
     { name = "sentry-sdk", extras = ["fastapi"], specifier = ">=2.0.0" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0.0" },

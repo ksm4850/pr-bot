@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
-from app.models.error import ParsedError, StackFrame
-from app.models.job import ErrorSource
-from app.services.parsers.base import ErrorParser
+from models.error import ParsedError, StackFrame
+from models.job import ErrorSource
+from services.parsers.base import ErrorParser
 
 
 # Sentry 전용 Pydantic 모델 (파싱용)

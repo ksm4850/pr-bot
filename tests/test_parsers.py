@@ -1,8 +1,8 @@
 import pytest
 
-from app.models.job import ErrorSource
-from app.services.parsers import get_parser
-from app.services.parsers.sentry import SentryParser
+from models.job import ErrorSource
+from services.parsers import get_parser
+from services.parsers.sentry import SentryParser
 
 
 class TestSentryParser:

@@ -1,7 +1,7 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
-from app.core import database
+from core import database
 
 
 class DBSessionMiddleware(BaseHTTPMiddleware):

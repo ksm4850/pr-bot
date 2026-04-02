@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from app.services.worker_manager import worker_manager
+from services.worker_manager import worker_manager
 
 router = APIRouter()
 

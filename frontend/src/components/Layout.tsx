@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { WorkerControl } from '@/components/WorkerControl'
+import { SettingsModal } from '@/components/SettingsModal'
 import { Bot } from 'lucide-react'
 
 export function Layout() {
@@ -11,7 +12,10 @@ export function Layout() {
             <Bot className="h-5 w-5" />
             <span className="text-lg font-bold tracking-tight">PR-Bot</span>
           </a>
-          <WorkerControl />
+          <div className="flex items-center gap-1">
+            <WorkerControl />
+            <SettingsModal />
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-6 py-8">

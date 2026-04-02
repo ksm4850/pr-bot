@@ -1,6 +1,6 @@
-from app.models.job import ErrorSource
-from app.services.parsers.base import ErrorParser
-from app.services.parsers.sentry import SentryParser
+from models.job import ErrorSource
+from services.parsers.base import ErrorParser
+from services.parsers.sentry import SentryParser
 
 # 파서 레지스트리
 _PARSERS: dict[ErrorSource, ErrorParser] = {

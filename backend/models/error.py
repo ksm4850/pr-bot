@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from app.models.job import ErrorSource
+from models.job import ErrorSource
 
 
 class StackFrame(BaseModel):

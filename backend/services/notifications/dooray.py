@@ -2,7 +2,7 @@ import logging
 
 import httpx
 
-from app.services.notifications.base import NotificationMessage, NotificationSender
+from services.notifications.base import NotificationMessage, NotificationSender
 
 logger = logging.getLogger(__name__)
 
@@ -10,10 +10,8 @@ logger = logging.getLogger(__name__)
 class DoorayNotificationSender(NotificationSender):
     """Dooray 웹훅 알림 발송"""
 
-    def __init__(self, webhook_url: str, bot_name: str = "PR-Bot", bot_icon_url: str | None = None):
+    def __init__(self, webhook_url: str):
         self.webhook_url = webhook_url
-        self.bot_name = bot_name
-        self.bot_icon_url = bot_icon_url
 
     @property
     def name(self) -> str:
@@ -21,22 +19,18 @@ class DoorayNotificationSender(NotificationSender):
 
     async def send(self, message: NotificationMessage) -> bool:
         payload = {
-            "botName": self.bot_name,
-            "text": message.title,
+            "botName": message.bot_name,
+            "botIconImage": message.bot_icon_image,
+            "text": message.text,
             "attachments": [
                 {
                     "title": message.title,
-                    "text": message.text,
+                    "titleLink": message.title_link,
+                    "text": message.attachment_text,
                     "color": message.color,
                 }
             ],
         }
-
-        if self.bot_icon_url:
-            payload["botIconImage"] = self.bot_icon_url
-
-        if message.title_link:
-            payload["attachments"][0]["titleLink"] = message.title_link
 
         try:
             async with httpx.AsyncClient() as client:

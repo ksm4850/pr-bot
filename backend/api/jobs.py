@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 
-from app.models.job import Job, JobStatus, JobTask
-from app.services.job_queue import JobService
+from models.job import Job, JobStatus, JobTask
+from services.job_queue import JobService
 
 router = APIRouter()
 service = JobService()

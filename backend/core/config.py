@@ -53,10 +53,7 @@ class Settings(BaseSettings):
     sentry_webhook_secret: str | None = None
     sentry_dsn: str | None = None
 
-    # Dooray webhook
-    dooray_webhook_url: str | None = None
-    dooray_bot_name: str = "PR-Bot"
-    dooray_bot_icon_url: str | None = None
+    # Dooray webhook (DB settings 테이블에서 관리)
 
 
 settings = Settings()

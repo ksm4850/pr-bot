@@ -2,9 +2,9 @@
 
 from datetime import datetime
 
-from app.models.error import ParsedError
-from app.models.job import ErrorSource, Job, JobStatus, JobTask, JobTaskType
-from app.repositories.job import JobRepository
+from models.error import ParsedError
+from models.job import ErrorSource, Job, JobStatus, JobTask, JobTaskType
+from repositories.job import JobRepository
 
 
 class JobService:

@@ -4,9 +4,9 @@ from sqlalchemy import select, text
 
 from fastapi import APIRouter
 
-from app.core.database import db_session
-from app.models.job import JobModel
-from app.models.project import ProjectModel
+from core.database import db_session
+from models.job import JobModel
+from models.project import ProjectModel
 
 router = APIRouter()
 

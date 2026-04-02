@@ -12,7 +12,8 @@
       "Bash(npx vite:*)",
       "Bash(npm create:*)",
       "Bash(npx:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(xargs basename:*)"
     ]
   }
 }

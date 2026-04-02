@@ -5,10 +5,13 @@ from dataclasses import dataclass
 @dataclass
 class NotificationMessage:
     """알림 메시지"""
-    title: str
-    text: str
-    color: str = "green"
-    title_link: str | None = None
+    bot_name: str = ""
+    bot_icon_image: str = "https://i.postimg.cc/QC0xBch6/Dooray-Bot.png"
+    text: str = ""
+    title: str = ""
+    title_link: str = ""
+    attachment_text: str = ""
+    color: str = "red"
 
 
 class NotificationSender(ABC):

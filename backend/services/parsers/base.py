@@ -1,8 +1,8 @@
 import json
 from abc import ABC, abstractmethod
 
-from app.models.error import ParsedError
-from app.models.job import ErrorSource
+from models.error import ParsedError
+from models.job import ErrorSource
 
 
 class ErrorParser(ABC):

@@ -8,16 +8,16 @@ import subprocess
 from pathlib import Path
 
 import anthropic
-from app.core.database import db_context
-from app.core.config import settings
-from app.models.job import Job, JobTaskType
-from app.prompts.fix_error import (
+from core.database import db_context
+from core.config import settings
+from models.job import Job, JobTaskType
+from prompts.fix_error import (
     EXECUTOR_SYSTEM_PROMPT,
     PLANNER_SYSTEM_PROMPT,
     build_execute_prompt,
     build_plan_prompt,
 )
-from app.services.job_queue import JobService
+from services.job_queue import JobService
 
 logger = logging.getLogger(__name__)
 
@@ -176,7 +176,6 @@ class AgentService:
 
         if summary:
             logger.info("[agent] Saving summary for job %s", job.id)
-            from app.core.database import db_context
             async with db_context():
                 await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[SUMMARY]\n{summary}", label="최종 완료 요약")
 
