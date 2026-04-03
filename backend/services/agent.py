@@ -18,6 +18,8 @@ from prompts.fix_error import (
     build_plan_prompt,
 )
 from services.job_queue import JobService
+from services.notifications import DoorayNotificationSender, NotificationMessage
+from services.setting import SettingService
 
 logger = logging.getLogger(__name__)
 
@@ -137,6 +139,19 @@ class AgentService:
             self._client = None  # claude-code 모드에서는 미사용
             self.token_pool = TokenPool(tokens)
 
+    async def _notify(self, message: NotificationMessage) -> None:
+        """설정이 켜져 있으면 Dooray 알림 발송 (실패해도 무시)"""
+        try:
+            setting_svc = SettingService()
+            async with db_context():
+                ok, url = await setting_svc.can_notify()
+            if not ok:
+                return
+            sender = DoorayNotificationSender(url)
+            await sender.send(message)
+        except Exception:
+            logger.exception("[notify] 알림 발송 실패 (무시)")
+
     async def run(
         self,
         job: Job,
@@ -152,6 +167,18 @@ class AgentService:
         """
         mode = settings.agent_mode
         logger.info("[agent] Mode: %s | job %s | resume=%s", mode, job.id, resume)
+
+        # 작업 시작 알림
+        await self._notify(NotificationMessage(
+            bot_name="PR-Bot",
+            title=f"작업 시작: {job.title or job.exception_type or 'Unknown'}",
+            attachment_text=(
+                f"**Job**: `{job.id}`\n"
+                f"**에러**: {job.exception_type or '?'} - {job.message or '?'}\n"
+                f"**파일**: {job.filename or '?'}:{job.lineno or '?'}"
+            ),
+            color="blue",
+        ))
 
         plan: str | None = None
         prev_context: str | None = None
@@ -178,6 +205,21 @@ class AgentService:
             logger.info("[agent] Saving summary for job %s", job.id)
             async with db_context():
                 await job_svc.add_task(job.id, JobTaskType.MESSAGE, content=f"[SUMMARY]\n{summary}", label="최종 완료 요약")
+
+        # 작업 완료 알림
+        await self._notify(NotificationMessage(
+            bot_name="PR-Bot",
+            title=f"작업 완료: {job.title or job.exception_type or 'Unknown'}",
+            title_link=getattr(job, "pr_url", "") or "",
+            attachment_text=(
+                f"**Job**: `{job.id}`\n"
+                f"**에러**: {job.exception_type or '?'} - {job.message or '?'}\n"
+                f"**파일**: {job.filename or '?'}:{job.lineno or '?'}\n"
+                f"**브랜치**: `{work_branch}`\n"
+                f"**요약**: {(summary or '없음')[:300]}"
+            ),
+            color="green",
+        ))
 
     async def _restore_from_tasks(self, job_id: str, job_svc: JobService) -> tuple[str | None, str | None]:
         """이전 task에서 플랜과 작업 컨텍스트 복원"""
